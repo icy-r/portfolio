@@ -28,6 +28,9 @@ ADMIN_EMAIL=asath12882@gmail.com
 
 # NextAuth Secret (generate a random string)
 NEXTAUTH_SECRET=your-random-secret-key
+
+# NextAuth URL (required for production - your production domain)
+NEXTAUTH_URL=https://yourdomain.com
 ```
 
 **For Gmail:**

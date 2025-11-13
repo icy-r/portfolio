@@ -8,7 +8,21 @@ export async function POST(request: NextRequest) {
     
     // Generate login token
     const token = generateLoginToken(adminEmail);
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    
+    // Get the correct base URL
+    // Priority: NEXTAUTH_URL env var > construct from request headers > fallback to localhost
+    let baseUrl = process.env.NEXTAUTH_URL;
+    
+    if (!baseUrl) {
+      // Construct from request headers (works in both dev and production)
+      const protocol = request.headers.get("x-forwarded-proto") || 
+                      (request.nextUrl.protocol === "https:" ? "https" : "http");
+      const host = request.headers.get("host") || 
+                   request.headers.get("x-forwarded-host") || 
+                   "localhost:3000";
+      baseUrl = `${protocol}://${host}`;
+    }
+    
     const loginUrl = `${baseUrl}/api/auth/verify-login?token=${token}&email=${encodeURIComponent(adminEmail)}`;
 
     // Try to send email, but don't fail if email service is not configured
