@@ -1,29 +1,41 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useIntersectionObserver } from "@/lib/utils";
 import Card from "./ui/Card";
 import Button from "./ui/Button";
 import { ExternalLink } from "lucide-react";
 
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+}
+
 export default function Blog() {
   const sectionRef = useRef<HTMLElement>(null);
   useIntersectionObserver(sectionRef, 0.1, "0px");
-  // Placeholder for blog posts - can be replaced with actual blog data
-  const blogPosts = [
-    {
-      title: "Building Modern Web Applications with Next.js",
-      excerpt: "Exploring the latest features and best practices in Next.js development...",
-      date: "Coming Soon",
-      link: "#",
-    },
-    {
-      title: "My Journey as a Software Engineering Student",
-      excerpt: "Reflections on learning, projects, and growth in software development...",
-      date: "Coming Soon",
-      link: "#",
-    },
-  ];
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      const res = await fetch("/api/blogs?published=true");
+      if (res.ok) {
+        const data = await res.json();
+        setBlogPosts(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch blogs:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section
@@ -40,31 +52,47 @@ export default function Blog() {
           </p>
         </div>
 
-        <div className="space-y-6">
-          {blogPosts.map((post, index) => (
-            <Card key={index} hover>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-white mb-2">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-400 mb-4">{post.excerpt}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-sm">{post.date}</span>
-                    <Button
-                      href={post.link}
-                      variant="outline"
-                      className="text-sm"
-                    >
-                      Read More
-                      <ExternalLink size={16} className="ml-2" />
-                    </Button>
+        {isLoading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-400">Loading blog posts...</p>
+          </div>
+        ) : blogPosts.length > 0 ? (
+          <div className="space-y-6">
+            {blogPosts.map((post) => (
+              <Card key={post.id} hover>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-400 mb-4">{post.excerpt}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-sm">
+                        {new Date(post.date).toLocaleDateString()}
+                      </span>
+                      <Button
+                        href={`/blog/${post.id}`}
+                        variant="outline"
+                        className="text-sm"
+                      >
+                        Read More
+                        <ExternalLink size={16} className="ml-2" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <Card>
+              <p className="text-gray-400 text-center py-8">
+                No blog posts available yet. Check back soon!
+              </p>
             </Card>
-          ))}
-        </div>
+          </div>
+        )}
 
         <div className="mt-12 text-center">
           <Card>

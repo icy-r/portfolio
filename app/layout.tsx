@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import SmoothScroll from "@/lib/smooth-scroll";
+import Provider from "@/lib/session-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -40,7 +41,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body className={`${inter.variable} antialiased`}>
-        <SmoothScroll>{children}</SmoothScroll>
+        <Provider>
+          <SmoothScroll>{children}</SmoothScroll>
+        </Provider>
       </body>
     </html>
   );

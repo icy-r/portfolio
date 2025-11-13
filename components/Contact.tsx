@@ -18,15 +18,28 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // In a real application, you would send this to an API endpoint
-    // For now, we'll use mailto as a fallback
-    const mailtoLink = `mailto:asath12882@gmail.com?subject=Contact from ${formData.name}&body=${encodeURIComponent(formData.message)}`;
-    window.location.href = mailtoLink;
-    
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contacts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setFormData({ name: "", email: "", message: "" });
+        alert("Thank you for your message! I'll get back to you soon.");
+      } else {
+        // Fallback to mailto
+        const mailtoLink = `mailto:asath12882@gmail.com?subject=Contact from ${formData.name}&body=${encodeURIComponent(formData.message)}`;
+        window.location.href = mailtoLink;
+      }
+    } catch (error) {
+      // Fallback to mailto
+      const mailtoLink = `mailto:asath12882@gmail.com?subject=Contact from ${formData.name}&body=${encodeURIComponent(formData.message)}`;
+      window.location.href = mailtoLink;
+    } finally {
       setIsSubmitting(false);
-      setFormData({ name: "", email: "", message: "" });
-    }, 1000);
+    }
   };
 
   const handleChange = (
