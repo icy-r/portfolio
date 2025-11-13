@@ -1,0 +1,97 @@
+"use client";
+
+import { useEffect, useState, useRef } from "react";
+import { useIntersectionObserver } from "@/lib/utils";
+import ProjectCard from "./ui/ProjectCard";
+import { type GitHubRepo } from "@/lib/github";
+import { Github } from "lucide-react";
+import Button from "./ui/Button";
+
+export default function Projects() {
+  const [repos, setRepos] = useState<GitHubRepo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadRepos() {
+      try {
+        const response = await fetch("/api/github?type=repos&username=icy-r&limit=6");
+        const data = await response.json();
+        setRepos(data);
+      } catch (error) {
+        console.error("Failed to load repositories:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadRepos();
+  }, []);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  useIntersectionObserver(sectionRef, 0.1, "0px");
+
+  return (
+    <section
+      ref={sectionRef}
+      id="projects"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-black fade-in-section"
+    >
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-white mb-4">Projects</h2>
+          <div className="w-24 h-1 bg-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            A selection of my recent projects and contributions. Check out my GitHub
+            for more!
+          </p>
+        </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-[#111111] border border-[#1f1f1f] rounded-xl p-6 animate-pulse"
+              >
+                <div className="h-6 bg-gray-800 rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-gray-800 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-800 rounded w-5/6"></div>
+              </div>
+            ))}
+          </div>
+        ) : repos.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {repos.map((repo) => (
+                <ProjectCard
+                  key={repo.id}
+                  name={repo.name}
+                  description={repo.description}
+                  language={repo.language}
+                  stars={repo.stargazers_count}
+                  url={repo.html_url}
+                  homepage={repo.homepage}
+                />
+              ))}
+            </div>
+            <div className="text-center">
+              <Button
+                href="https://github.com/icy-r?tab=repositories"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="outline"
+              >
+                <Github size={20} className="mr-2" />
+                View All Repositories
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div className="text-center text-gray-400 py-12">
+            <p>No projects found. Check back later!</p>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
