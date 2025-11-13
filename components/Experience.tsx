@@ -13,7 +13,7 @@ export default function Experience() {
     <section
       ref={sectionRef}
       id="experience"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a] fade-in-section"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a]/30 backdrop-blur-sm fade-in-section"
     >
       <div className="max-w-4xl mx-auto">
         <h2 className="text-4xl font-bold text-white mb-4 text-center">

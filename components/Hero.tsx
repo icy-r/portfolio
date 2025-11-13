@@ -34,7 +34,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16 bg-gradient-to-b from-black via-[#0a0a0a] to-black"
+      className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16 bg-gradient-to-b from-black/50 via-[#0a0a0a]/50 to-black/50 backdrop-blur-sm"
     >
       <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
         <div className="mb-8">

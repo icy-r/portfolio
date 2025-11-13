@@ -29,7 +29,7 @@ export default function Blog() {
     <section
       ref={sectionRef}
       id="blog"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-black fade-in-section"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-black/30 backdrop-blur-sm fade-in-section"
     >
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">

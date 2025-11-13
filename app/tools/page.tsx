@@ -43,7 +43,7 @@ const tools = [
 
 export default function ToolsPage() {
   return (
-    <main className="min-h-screen bg-black pt-20 pb-20 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-black/30 backdrop-blur-sm pt-20 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">Developer Tools</h1>

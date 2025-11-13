@@ -12,7 +12,7 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-black fade-in-section"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-black/30 backdrop-blur-sm fade-in-section"
     >
       <div className="max-w-4xl mx-auto">
         <h2 className="text-4xl font-bold text-white mb-4 text-center">

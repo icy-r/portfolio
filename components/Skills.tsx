@@ -73,7 +73,7 @@ export default function Skills() {
     <section
       ref={sectionRef}
       id="skills"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a] fade-in-section"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a]/30 backdrop-blur-sm fade-in-section"
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
