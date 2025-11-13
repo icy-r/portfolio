@@ -116,18 +116,16 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Hidden when menu is open */}
             <button
-              className="md:hidden text-gray-300 hover:text-white transition-colors z-50 relative p-2 -mr-2"
+              className={`md:hidden text-gray-300 hover:text-white transition-all duration-300 z-50 relative p-2 -mr-2 ${
+                isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+              }`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
             >
-              {isMobileMenuOpen ? (
-                <X size={24} className="transition-transform duration-300 rotate-0" />
-              ) : (
-                <Menu size={24} className="transition-transform duration-300" />
-              )}
+              <Menu size={24} className="transition-transform duration-300" />
             </button>
           </div>
         </div>
