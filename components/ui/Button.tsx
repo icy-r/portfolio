@@ -11,6 +11,7 @@ interface ButtonProps {
   rel?: string;
   type?: "button" | "submit" | "reset";
   download?: string;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -23,6 +24,7 @@ export default function Button({
   rel,
   type = "button",
   download,
+  disabled = false,
 }: ButtonProps) {
   const baseStyles =
     "inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black";
@@ -36,39 +38,46 @@ export default function Button({
       "border-2 border-gray-700 text-gray-300 hover:border-blue-600 hover:text-blue-400 focus:ring-blue-500 bg-transparent",
   };
 
-  const combinedClassName = `${baseStyles} ${variants[variant]} ${className}`;
+  const combinedClassName = `${baseStyles} ${variants[variant]} ${className} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
 
-  if (href) {
-    // Use regular anchor tag for downloads (Next.js Link doesn't support download attribute)
-    if (download) {
+      if (href) {
+        // Use regular anchor tag for downloads (Next.js Link doesn't support download attribute)
+        if (download) {
+          return (
+            <a
+              href={href}
+              download={download}
+              className={combinedClassName}
+              target={target}
+              rel={rel}
+              aria-disabled={disabled}
+            >
+              {children}
+            </a>
+          );
+        }
+        return (
+          <Link
+            href={href}
+            className={combinedClassName}
+            target={target}
+            rel={rel}
+            aria-disabled={disabled}
+          >
+            {children}
+          </Link>
+        );
+      }
+
       return (
-        <a
-          href={href}
-          download={download}
+        <button 
+          type={type} 
+          onClick={onClick} 
           className={combinedClassName}
-          target={target}
-          rel={rel}
+          disabled={disabled}
         >
           {children}
-        </a>
+        </button>
       );
-    }
-    return (
-      <Link
-        href={href}
-        className={combinedClassName}
-        target={target}
-        rel={rel}
-      >
-        {children}
-      </Link>
-    );
-  }
-
-  return (
-    <button type={type} onClick={onClick} className={combinedClassName}>
-      {children}
-    </button>
-  );
 }
 
