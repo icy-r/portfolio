@@ -91,16 +91,16 @@ export default function BackgroundElements() {
   }, []);
 
   return (
-    <>
+    <div className="fixed inset-0 w-screen h-screen pointer-events-none" style={{ zIndex: 0 }}>
       {/* Animated gradient circles */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 w-full h-full pointer-events-none z-0"
+        className="absolute inset-0 w-full h-full"
         style={{ opacity: 0.3 }}
       />
 
       {/* SVG Vector Patterns */}
-      <div className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
         <svg
           className="absolute inset-0 w-full h-full"
           xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +190,7 @@ export default function BackgroundElements() {
           </svg>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

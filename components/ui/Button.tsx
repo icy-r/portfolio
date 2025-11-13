@@ -10,6 +10,7 @@ interface ButtonProps {
   target?: string;
   rel?: string;
   type?: "button" | "submit" | "reset";
+  download?: string;
 }
 
 export default function Button({
@@ -21,6 +22,7 @@ export default function Button({
   target,
   rel,
   type = "button",
+  download,
 }: ButtonProps) {
   const baseStyles =
     "inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black";
@@ -37,6 +39,20 @@ export default function Button({
   const combinedClassName = `${baseStyles} ${variants[variant]} ${className}`;
 
   if (href) {
+    // Use regular anchor tag for downloads (Next.js Link doesn't support download attribute)
+    if (download) {
+      return (
+        <a
+          href={href}
+          download={download}
+          className={combinedClassName}
+          target={target}
+          rel={rel}
+        >
+          {children}
+        </a>
+      );
+    }
     return (
       <Link
         href={href}

@@ -68,6 +68,15 @@ export default function Hero() {
             View GitHub
           </Button>
           <Button
+            href="/cv.pdf"
+            download="Mohamed_Asath_CV.pdf"
+            variant="primary"
+            className="bg-gray-800 hover:bg-gray-700 border-gray-700"
+          >
+            <Download size={20} className="mr-2" />
+            Download CV
+          </Button>
+          <Button
             onClick={() => scrollToSection("#contact")}
             variant="outline"
           >
