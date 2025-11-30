@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -97,11 +99,12 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           isScrolled
-            ? "bg-black/80 backdrop-blur-md border-b border-gray-800"
+            ? "bg-black/50 backdrop-blur-md border-b border-white/10 shadow-lg"
             : "bg-transparent"
-        }`}
+        )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -120,18 +123,26 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={handleNavClick}
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm font-medium"
+                  className={cn(
+                    "text-sm font-medium transition-colors relative group",
+                    pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
+                      ? "text-blue-400"
+                      : "text-gray-300 hover:text-blue-400"
+                  )}
                 >
                   {link.label}
+                  <span className={cn(
+                    "absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover:w-full",
+                    pathname === link.href && "w-full"
+                  )} />
                 </Link>
               ))}
             </div>
 
             {/* Mobile Menu Button - Hidden when menu is open */}
             <button
-              className={`md:hidden text-gray-300 hover:text-white transition-all duration-300 z-50 relative p-2 -mr-2 ${
-                isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-              }`}
+              className={`md:hidden text-gray-300 hover:text-white transition-all duration-300 z-50 relative p-2 -mr-2 ${isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+                }`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
@@ -143,72 +154,75 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Menu Overlay */}
-      <div
-        ref={menuRef}
-        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen
-            ? "opacity-100 visible"
-            : "opacity-0 invisible pointer-events-none"
-        }`}
-      >
-        {/* Backdrop */}
-        <div
-          className={`absolute inset-0 bg-black/95 backdrop-blur-lg transition-opacity duration-300 ${
-            isMobileMenuOpen ? "opacity-100" : "opacity-0"
-          }`}
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-
-        {/* Menu Content */}
-        <div
-          className={`absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-black/98 backdrop-blur-xl border-l border-gray-800 shadow-2xl transition-transform duration-300 ease-in-out ${
-            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <div className="flex flex-col h-full pt-20 px-6">
-            {/* Close Button */}
-            <button
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors p-2"
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-40 md:hidden">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setIsMobileMenuOpen(false)}
-              aria-label="Close menu"
+            />
+
+            {/* Menu Content */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-[#0a0a0a]/95 backdrop-blur-xl border-l border-white/10 shadow-2xl"
             >
-              <X size={24} />
-            </button>
-
-            {/* Navigation Links */}
-            <nav className="flex flex-col space-y-2">
-              {navLinks.map((link, index) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={handleNavClick}
-                  className={`group relative py-4 px-4 text-gray-300 hover:text-white transition-all duration-200 rounded-lg hover:bg-blue-600/10 border border-transparent hover:border-blue-600/20 ${
-                    isMobileMenuOpen
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 translate-x-4"
-                  }`}
-                  style={{
-                    transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : "0ms",
-                  }}
+              <div className="flex flex-col h-full pt-20 px-6">
+                {/* Close Button */}
+                <button
+                  className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors p-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  aria-label="Close menu"
                 >
-                  <span className="relative z-10 text-lg font-medium">
-                    {link.label}
-                  </span>
-                  <span className="absolute left-0 top-0 h-full w-0 bg-blue-600/10 transition-all duration-300 group-hover:w-full rounded-lg" />
-                </Link>
-              ))}
-            </nav>
+                  <X size={24} />
+                </button>
 
-            {/* Footer Info */}
-            <div className="mt-auto pb-8 pt-8 border-t border-gray-800">
-              <div className="text-sm text-gray-500 space-y-2">
-                <p className="font-medium text-gray-400">M Mohamed Asath</p>
-                <p>Associate Software Engineer</p>
+                {/* Navigation Links */}
+                <nav className="flex flex-col space-y-2">
+                  {navLinks.map((link, index) => (
+                    <motion.div
+                      key={link.href}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 + 0.1 }}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={handleNavClick}
+                        className={cn(
+                          "group relative block py-4 px-4 rounded-lg border border-transparent transition-all duration-200",
+                          pathname === link.href
+                            ? "bg-blue-600/10 border-blue-600/20 text-blue-400"
+                            : "text-gray-300 hover:text-white hover:bg-white/5 hover:border-white/10"
+                        )}
+                      >
+                        <span className="relative z-10 text-lg font-medium">
+                          {link.label}
+                        </span>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </nav>
+
+                {/* Footer Info */}
+                <div className="mt-auto pb-8 pt-8 border-t border-white/10">
+                  <div className="text-sm text-gray-500 space-y-2">
+                    <p className="font-medium text-gray-400">M Mohamed Asath</p>
+                    <p>Associate Software Engineer</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

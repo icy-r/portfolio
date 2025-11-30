@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface ButtonProps {
   children: ReactNode;
@@ -38,46 +40,59 @@ export default function Button({
       "border-2 border-gray-700 text-gray-300 hover:border-blue-600 hover:text-blue-400 focus:ring-blue-500 bg-transparent",
   };
 
-  const combinedClassName = `${baseStyles} ${variants[variant]} ${className} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
+  const combinedClassName = cn(baseStyles, variants[variant], className, disabled && "opacity-50 cursor-not-allowed");
 
-      if (href) {
-        // Use regular anchor tag for downloads (Next.js Link doesn't support download attribute)
-        if (download) {
-          return (
-            <a
-              href={href}
-              download={download}
-              className={combinedClassName}
-              target={target}
-              rel={rel}
-              aria-disabled={disabled}
-            >
-              {children}
-            </a>
-          );
-        }
-        return (
-          <Link
-            href={href}
-            className={combinedClassName}
-            target={target}
-            rel={rel}
-            aria-disabled={disabled}
-          >
-            {children}
-          </Link>
-        );
-      }
+  const MotionLink = motion.create(Link);
+  const MotionA = motion.create("a");
+  const MotionButton = motion.create("button");
 
+  const hoverProps = {
+    whileHover: { scale: 1.02 },
+    whileTap: { scale: 0.98 },
+    transition: { type: "spring" as const, stiffness: 400, damping: 17 }
+  };
+
+  if (href) {
+    // Use regular anchor tag for downloads (Next.js Link doesn't support download attribute)
+    if (download) {
       return (
-        <button 
-          type={type} 
-          onClick={onClick} 
+        <MotionA
+          href={href}
+          download={download}
           className={combinedClassName}
-          disabled={disabled}
+          target={target}
+          rel={rel}
+          aria-disabled={disabled}
+          {...hoverProps}
         >
           {children}
-        </button>
+        </MotionA>
       );
+    }
+    return (
+      <MotionLink
+        href={href}
+        className={combinedClassName}
+        target={target}
+        rel={rel}
+        aria-disabled={disabled}
+        {...hoverProps}
+      >
+        {children}
+      </MotionLink>
+    );
+  }
+
+  return (
+    <MotionButton
+      type={type}
+      onClick={onClick}
+      className={combinedClassName}
+      disabled={disabled}
+      {...hoverProps}
+    >
+      {children}
+    </MotionButton>
+  );
 }
 

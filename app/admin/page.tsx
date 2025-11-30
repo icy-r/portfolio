@@ -16,6 +16,7 @@ import {
   EyeOff,
   LogOut,
   Home,
+  Star,
 } from "lucide-react";
 
 interface BlogPost {
@@ -146,6 +147,12 @@ export default function AdminDashboard() {
                 Home
               </Button>
             </Link>
+            <Link href="/admin/repos">
+              <Button variant="outline">
+                <Star size={18} className="mr-2" />
+                Manage Repos
+              </Button>
+            </Link>
             <Button variant="outline" onClick={handleLogout}>
               <LogOut size={18} className="mr-2" />
               Logout
@@ -157,22 +164,20 @@ export default function AdminDashboard() {
         <div className="flex gap-4 mb-6 border-b border-gray-800">
           <button
             onClick={() => setActiveTab("blogs")}
-            className={`px-6 py-3 font-medium transition-colors border-b-2 ${
-              activeTab === "blogs"
-                ? "border-blue-600 text-blue-400"
-                : "border-transparent text-gray-400 hover:text-white"
-            }`}
+            className={`px-6 py-3 font-medium transition-colors border-b-2 ${activeTab === "blogs"
+              ? "border-blue-600 text-blue-400"
+              : "border-transparent text-gray-400 hover:text-white"
+              }`}
           >
             <BookOpen size={20} className="inline mr-2" />
             Blogs ({blogs.length})
           </button>
           <button
             onClick={() => setActiveTab("contacts")}
-            className={`px-6 py-3 font-medium transition-colors border-b-2 relative ${
-              activeTab === "contacts"
-                ? "border-blue-600 text-blue-400"
-                : "border-transparent text-gray-400 hover:text-white"
-            }`}
+            className={`px-6 py-3 font-medium transition-colors border-b-2 relative ${activeTab === "contacts"
+              ? "border-blue-600 text-blue-400"
+              : "border-transparent text-gray-400 hover:text-white"
+              }`}
           >
             <Mail size={20} className="inline mr-2" />
             Contacts ({contacts.length})

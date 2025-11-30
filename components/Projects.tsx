@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useIntersectionObserver } from "@/lib/utils";
+import { useIntersectionObserver } from "@/lib/hooks";
 import ProjectCard from "./ui/ProjectCard";
 import { type GitHubRepo } from "@/lib/github";
 import { Github } from "lucide-react";
@@ -14,9 +14,35 @@ export default function Projects() {
   useEffect(() => {
     async function loadRepos() {
       try {
-        const response = await fetch("/api/github?type=repos&username=icy-r&limit=6");
-        const data = await response.json();
-        setRepos(data);
+        const [reposRes, pinnedRes] = await Promise.all([
+          fetch("/api/github?type=repos&username=icy-r&limit=100"),
+          fetch("/api/admin/pinned-repos"),
+        ]);
+
+        const reposData: GitHubRepo[] = await reposRes.json();
+        const pinnedIds: number[] = await pinnedRes.json();
+
+        // Filter repos to only show pinned ones, or show pinned first
+        // If pinned IDs exist, show those. If not, show latest 6.
+        // Or show pinned first, then others up to limit.
+
+        let displayRepos: GitHubRepo[] = [];
+
+        if (pinnedIds.length > 0) {
+          const pinnedRepos = reposData.filter((repo) =>
+            pinnedIds.includes(repo.id)
+          );
+          // Sort pinned repos by order in pinnedIds if needed, or just by update time
+          // For now, let's just put them at the top
+          const unpinnedRepos = reposData.filter(
+            (repo) => !pinnedIds.includes(repo.id)
+          );
+          displayRepos = [...pinnedRepos, ...unpinnedRepos].slice(0, 6);
+        } else {
+          displayRepos = reposData.slice(0, 6);
+        }
+
+        setRepos(displayRepos);
       } catch (error) {
         console.error("Failed to load repositories:", error);
       } finally {

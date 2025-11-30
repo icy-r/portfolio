@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useIntersectionObserver } from "@/lib/utils";
+import { useIntersectionObserver } from "@/lib/hooks";
 import Card from "./ui/Card";
 import Button from "./ui/Button";
 import { Mail, Github, Globe, Send, Linkedin, Phone } from "lucide-react";
@@ -17,7 +17,7 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const res = await fetch("/api/contacts", {
         method: "POST",

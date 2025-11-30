@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Github, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface ProjectCardProps {
   name: string;
@@ -19,7 +21,11 @@ export default function ProjectCard({
   homepage,
 }: ProjectCardProps) {
   return (
-    <div className="group bg-[#111111]/80 backdrop-blur-sm border border-gray-800 rounded-xl p-6 transition-all duration-300 hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-1 h-full flex flex-col">
+    <motion.div
+      whileHover={{ y: -5 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      className="group bg-[#111111]/80 backdrop-blur-sm border border-gray-800 rounded-xl p-6 transition-all duration-300 hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/20 h-full flex flex-col"
+    >
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors flex-1 pr-2">
           {name}
@@ -69,7 +75,6 @@ export default function ProjectCard({
           <span className="font-medium">{stars}</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
-

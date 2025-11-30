@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { useIntersectionObserver } from "@/lib/utils";
+import { useIntersectionObserver } from "@/lib/hooks";
 import Card from "./ui/Card";
 import Button from "./ui/Button";
 import { ExternalLink } from "lucide-react";

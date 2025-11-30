@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useIntersectionObserver } from "@/lib/utils";
+import { useIntersectionObserver } from "@/lib/hooks";
 import Link from "next/link";
 import Card from "./ui/Card";
 import { ArrowRight } from "lucide-react";

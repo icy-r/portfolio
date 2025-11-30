@@ -1,6 +1,6 @@
 "use client";
 
-import { useIntersectionObserver } from "@/lib/utils";
+import { useIntersectionObserver } from "@/lib/hooks";
 import { useRef } from "react";
 import Card from "./ui/Card";
 

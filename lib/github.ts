@@ -58,3 +58,15 @@ export async function fetchGitHubRepos(
   return repos.filter((repo) => !repo.name.includes("1st-Year")); // Filter out academic repos
 }
 
+export async function fetchPinnedRepos(): Promise<number[]> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/pinned-repos`, {
+      next: { revalidate: 0 }, // No cache for pinned repos
+    });
+    if (!response.ok) return [];
+    return response.json();
+  } catch (error) {
+    return [];
+  }
+}
+
