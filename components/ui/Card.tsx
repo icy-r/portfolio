@@ -4,9 +4,10 @@ interface CardProps {
   children: ReactNode;
   className?: string;
   hover?: boolean;
+  onClick?: () => void;
 }
 
-export default function Card({ children, className = "", hover = false }: CardProps) {
+export default function Card({ children, className = "", hover = false, onClick }: CardProps) {
   const baseStyles =
     "bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#1f1f1f] rounded-xl p-6 transition-all duration-300 shadow-sm dark:shadow-none";
   const hoverStyles = hover
@@ -14,9 +15,10 @@ export default function Card({ children, className = "", hover = false }: CardPr
     : "";
 
   return (
-    <div className={`${baseStyles} ${hoverStyles} ${className}`}>
+    <div className={`${baseStyles} ${hoverStyles} ${className}`} onClick={onClick}>
       {children}
     </div>
   );
 }
+
 

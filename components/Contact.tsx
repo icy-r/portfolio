@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useIntersectionObserver } from "@/lib/hooks";
 import Card from "./ui/Card";
 import Button from "./ui/Button";
+import Toast from "./ui/Toast";
 import { Mail, Github, Globe, Send, Linkedin, Phone, MessageCircle } from "lucide-react";
 
 export default function Contact() {
@@ -13,6 +14,7 @@ export default function Contact() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState({ isOpen: false, message: "", type: "success" as "success" | "error" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,18 +27,19 @@ export default function Contact() {
         body: JSON.stringify(formData),
       });
 
+      console.log("Response status:", res.status, "ok:", res.ok);
+
       if (res.ok) {
         setFormData({ name: "", email: "", message: "" });
-        alert("Thank you for your message! I'll get back to you soon.");
+        console.log("Setting success toast");
+        setToast({ isOpen: true, message: "Thank you for your message! I'll get back to you soon.", type: "success" });
       } else {
-        // Fallback to mailto
-        const mailtoLink = `mailto:asath12882@gmail.com?subject=Contact from ${formData.name}&body=${encodeURIComponent(formData.message)}`;
-        window.location.href = mailtoLink;
+        console.log("Setting error toast");
+        setToast({ isOpen: true, message: "Failed to send message. Please try again.", type: "error" });
       }
     } catch (error) {
-      // Fallback to mailto
-      const mailtoLink = `mailto:asath12882@gmail.com?subject=Contact from ${formData.name}&body=${encodeURIComponent(formData.message)}`;
-      window.location.href = mailtoLink;
+      console.error("Error submitting form:", error);
+      setToast({ isOpen: true, message: "An error occurred. Please try again.", type: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -278,6 +281,13 @@ export default function Contact() {
           </div>
         </div>
       </div>
+
+      <Toast
+        isOpen={toast.isOpen}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ ...toast, isOpen: false })}
+      />
     </section>
   );
 }

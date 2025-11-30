@@ -1,95 +1,113 @@
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/app/api/auth/[...nextauth]/route";
-import {
-  getContacts,
-  createContact,
-  getContact,
-  markContactAsRead,
-  deleteContact,
-} from "@/lib/data";
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/db";
+import Contact from "@/models/Contact";
 
-export async function GET(request: NextRequest) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const searchParams = request.nextUrl.searchParams;
-  const id = searchParams.get("id");
-
-  if (id) {
-    const contact = getContact(id);
-    if (!contact) {
-      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
-    }
-    return NextResponse.json(contact);
-  }
-
-  const contacts = getContacts();
-  return NextResponse.json(contacts);
-}
-
-export async function POST(request: NextRequest) {
-  // Public endpoint for submitting contact forms
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const contact = createContact({
-      name: body.name,
-      email: body.email,
-      message: body.message,
+    const { name, email, message } = await req.json();
+
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    await dbConnect();
+
+    const newContact = await Contact.create({
+      name,
+      email,
+      message,
     });
-    return NextResponse.json(contact, { status: 201 });
-  } catch (error) {
+
     return NextResponse.json(
-      { error: "Invalid request body" },
-      { status: 400 }
+      { message: "Message sent successfully", contact: newContact },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Error sending message:", error);
+    return NextResponse.json(
+      { error: "Failed to send message" },
+      { status: 500 }
     );
   }
 }
 
-export async function PUT(request: NextRequest) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function GET() {
   try {
-    const body = await request.json();
-    const { id, read } = body;
-    
-    if (read !== undefined) {
-      const success = markContactAsRead(id);
-      if (!success) {
-        return NextResponse.json({ error: "Contact not found" }, { status: 404 });
-      }
-      return NextResponse.json({ success: true });
-    }
-    
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    await dbConnect();
+    const contacts = await Contact.find({}).sort({ createdAt: -1 });
+
+    // Map MongoDB _id to id for frontend compatibility
+    const formattedContacts = contacts.map(contact => ({
+      id: contact._id.toString(),
+      name: contact.name,
+      email: contact.email,
+      message: contact.message,
+      read: contact.read || false,
+      createdAt: contact.createdAt,
+    }));
+
+    return NextResponse.json(formattedContacts);
   } catch (error) {
+    console.error("Error fetching contacts:", error);
     return NextResponse.json(
-      { error: "Invalid request body" },
-      { status: 400 }
+      { error: "Failed to fetch contacts" },
+      { status: 500 }
     );
   }
 }
 
-export async function DELETE(request: NextRequest) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
 
-  const searchParams = request.nextUrl.searchParams;
-  const id = searchParams.get("id");
-  if (!id) {
-    return NextResponse.json({ error: "ID required" }, { status: 400 });
-  }
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing contact ID" },
+        { status: 400 }
+      );
+    }
 
-  const deleted = deleteContact(id);
-  if (!deleted) {
-    return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+    await dbConnect();
+    await Contact.findByIdAndDelete(id);
+
+    return NextResponse.json({ message: "Contact deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting contact:", error);
+    return NextResponse.json(
+      { error: "Failed to delete contact" },
+      { status: 500 }
+    );
   }
-  return NextResponse.json({ success: true });
 }
 
+export async function PUT(req: Request) {
+  try {
+    const { id, read } = await req.json();
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing contact ID" },
+        { status: 400 }
+      );
+    }
+
+    await dbConnect();
+    const updatedContact = await Contact.findByIdAndUpdate(
+      id,
+      { read },
+      { new: true }
+    );
+
+    return NextResponse.json(updatedContact);
+  } catch (error) {
+    console.error("Error updating contact:", error);
+    return NextResponse.json(
+      { error: "Failed to update contact" },
+      { status: 500 }
+    );
+  }
+}

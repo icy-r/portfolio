@@ -1,39 +1,54 @@
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
+import dbConnect from "@/lib/db";
+import PinnedRepo from "@/models/PinnedRepo";
 
-const DATA_FILE = path.join(process.cwd(), "data", "pinned-repos.json");
-
-async function getPinnedRepos() {
+export async function GET() {
     try {
-        const data = await fs.readFile(DATA_FILE, "utf-8");
-        return JSON.parse(data);
+        await dbConnect();
+        const repos = await PinnedRepo.find({}).sort({ order: 1 });
+        return NextResponse.json(repos);
     } catch (error) {
-        return [];
+        console.error("Error fetching pinned repos:", error);
+        return NextResponse.json(
+            { error: "Failed to fetch pinned repos" },
+            { status: 500 }
+        );
     }
 }
 
-async function savePinnedRepos(repos: number[]) {
-    await fs.writeFile(DATA_FILE, JSON.stringify(repos, null, 2));
-}
-
-export async function GET() {
-    const repos = await getPinnedRepos();
-    return NextResponse.json(repos);
-}
-
-export async function POST(request: Request) {
+export async function POST(req: Request) {
     try {
-        const body = await request.json();
-        if (!Array.isArray(body)) {
+        const repos = await req.json();
+
+        if (!Array.isArray(repos)) {
             return NextResponse.json(
-                { error: "Invalid data format. Expected an array of IDs." },
+                { error: "Invalid data format" },
                 { status: 400 }
             );
         }
-        await savePinnedRepos(body);
-        return NextResponse.json({ success: true });
+
+        await dbConnect();
+
+        // Clear existing pinned repos and insert new ones
+        // This is a simple strategy: replace all. 
+        // For more complex scenarios, we might want to update/upsert.
+        await PinnedRepo.deleteMany({});
+
+        // Add order index if not present, though frontend should send it
+        const reposWithOrder = repos.map((repo, index) => ({
+            ...repo,
+            repoId: repo.id, // Map GitHub 'id' to 'repoId'
+            order: index,
+        }));
+
+        await PinnedRepo.insertMany(reposWithOrder);
+
+        return NextResponse.json(
+            { message: "Pinned repositories updated successfully" },
+            { status: 200 }
+        );
     } catch (error) {
+        console.error("Error updating pinned repos:", error);
         return NextResponse.json(
             { error: "Failed to update pinned repos" },
             { status: 500 }

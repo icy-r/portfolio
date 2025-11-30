@@ -1,104 +1,107 @@
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/app/api/auth/[...nextauth]/route";
-import {
-  getBlogs,
-  createBlog,
-  getBlog,
-  updateBlog,
-  deleteBlog,
-} from "@/lib/data";
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/db";
+import Blog from "@/models/Blog";
 
-export async function GET(request: NextRequest) {
-  const session = await auth();
-  const searchParams = request.nextUrl.searchParams;
-  const id = searchParams.get("id");
-  const published = searchParams.get("published");
-
-  if (id) {
-    const blog = getBlog(id);
-    if (!blog) {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
-    }
-    // Only show unpublished blogs to authenticated users
-    if (!blog.published && !session) {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
-    }
-    return NextResponse.json(blog);
+export async function GET() {
+  try {
+    await dbConnect();
+    const blogs = await Blog.find({}).sort({ date: -1 });
+    return NextResponse.json(blogs);
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch blogs" },
+      { status: 500 }
+    );
   }
-
-  const blogs = getBlogs();
-  
-  // Filter published blogs for public access
-  if (published === "true" || !session) {
-    return NextResponse.json(blogs.filter((b) => b.published));
-  }
-
-  // Return all blogs for admin
-  return NextResponse.json(blogs);
 }
 
-export async function POST(request: NextRequest) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const blog = createBlog({
-      title: body.title,
-      excerpt: body.excerpt,
-      content: body.content,
-      date: body.date || new Date().toISOString(),
-      published: body.published || false,
+    const { title, slug, excerpt, content, date, tags } = await req.json();
+
+    if (!title || !slug || !excerpt || !content || !date) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    await dbConnect();
+
+    const newBlog = await Blog.create({
+      title,
+      slug,
+      excerpt,
+      content,
+      date,
+      tags: tags || [],
     });
-    return NextResponse.json(blog, { status: 201 });
+
+    return NextResponse.json(newBlog, { status: 201 });
   } catch (error) {
+    console.error("Error creating blog:", error);
     return NextResponse.json(
-      { error: "Invalid request body" },
-      { status: 400 }
+      { error: "Failed to create blog" },
+      { status: 500 }
     );
   }
 }
 
-export async function PUT(request: NextRequest) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function DELETE(req: Request) {
   try {
-    const body = await request.json();
-    const { id, ...updates } = body;
-    const blog = updateBlog(id, updates);
-    if (!blog) {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing blog ID" },
+        { status: 400 }
+      );
     }
-    return NextResponse.json(blog);
+
+    await dbConnect();
+    await Blog.findByIdAndDelete(id);
+
+    return NextResponse.json({ message: "Blog deleted successfully" });
   } catch (error) {
+    console.error("Error deleting blog:", error);
     return NextResponse.json(
-      { error: "Invalid request body" },
-      { status: 400 }
+      { error: "Failed to delete blog" },
+      { status: 500 }
     );
   }
 }
 
-export async function DELETE(request: NextRequest) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+export async function PUT(req: Request) {
+  try {
+    const { id, published, ...updates } = await req.json();
 
-  const searchParams = request.nextUrl.searchParams;
-  const id = searchParams.get("id");
-  if (!id) {
-    return NextResponse.json({ error: "ID required" }, { status: 400 });
-  }
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing blog ID" },
+        { status: 400 }
+      );
+    }
 
-  const deleted = deleteBlog(id);
-  if (!deleted) {
-    return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+    await dbConnect();
+
+    // If published status is being toggled, handle it specifically
+    // Otherwise update other fields
+    const updateData = published !== undefined ? { published } : updates;
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    );
+
+    return NextResponse.json(updatedBlog);
+  } catch (error) {
+    console.error("Error updating blog:", error);
+    return NextResponse.json(
+      { error: "Failed to update blog" },
+      { status: 500 }
+    );
   }
-  return NextResponse.json({ success: true });
 }
-
