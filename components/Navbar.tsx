@@ -161,7 +161,7 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-40 md:hidden">
+          <div className="fixed inset-0 z-[60] md:hidden">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
