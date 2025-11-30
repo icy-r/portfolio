@@ -59,13 +59,13 @@ export default function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-black/30 backdrop-blur-sm fade-in-section"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-black/30 backdrop-blur-sm fade-in-section"
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-4">Projects</h2>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Projects</h2>
           <div className="w-24 h-1 bg-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             A selection of my recent projects and contributions. Check out my GitHub
             for more!
           </p>
@@ -76,11 +76,11 @@ export default function Projects() {
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="bg-[#111111] border border-[#1f1f1f] rounded-xl p-6 animate-pulse"
+                className="bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#1f1f1f] rounded-xl p-6 animate-pulse"
               >
-                <div className="h-6 bg-gray-800 rounded w-3/4 mb-4"></div>
-                <div className="h-4 bg-gray-800 rounded w-full mb-2"></div>
-                <div className="h-4 bg-gray-800 rounded w-5/6"></div>
+                <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
               </div>
             ))}
           </div>
@@ -112,7 +112,7 @@ export default function Projects() {
             </div>
           </>
         ) : (
-          <div className="text-center text-gray-400 py-12">
+          <div className="text-center text-gray-600 dark:text-gray-400 py-12">
             <p>No projects found. Check back later!</p>
           </div>
         )}

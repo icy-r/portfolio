@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import SmoothScroll from "@/lib/smooth-scroll";
 import Provider from "@/lib/session-provider";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -39,11 +40,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
-        <Provider>
-          <SmoothScroll>{children}</SmoothScroll>
-        </Provider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <Provider>
+            <SmoothScroll>{children}</SmoothScroll>
+          </Provider>
+        </ThemeProvider>
       </body>
     </html>
   );

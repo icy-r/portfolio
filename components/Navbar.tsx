@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "./ui/ThemeToggle";
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -102,7 +103,7 @@ export default function Navbar() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           isScrolled
-            ? "bg-black/50 backdrop-blur-md border-b border-white/10 shadow-lg"
+            ? "bg-black/50 dark:bg-black/50 bg-white/50 backdrop-blur-md border-b border-white/10 shadow-lg"
             : "bg-transparent"
         )}
       >
@@ -111,7 +112,7 @@ export default function Navbar() {
             <Link
               href="#home"
               onClick={handleNavClick}
-              className="text-xl font-bold text-white hover:text-blue-400 transition-colors z-50 relative"
+              className="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition-colors z-50 relative"
             >
               MA
             </Link>
@@ -126,29 +127,33 @@ export default function Navbar() {
                   className={cn(
                     "text-sm font-medium transition-colors relative group",
                     pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
-                      ? "text-blue-400"
-                      : "text-gray-300 hover:text-blue-400"
+                      ? "text-blue-500 dark:text-blue-400"
+                      : "text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
                   )}
                 >
                   {link.label}
                   <span className={cn(
-                    "absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover:w-full",
+                    "absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 dark:bg-blue-400 transition-all duration-300 group-hover:w-full",
                     pathname === link.href && "w-full"
                   )} />
                 </Link>
               ))}
+              <ThemeToggle />
             </div>
 
             {/* Mobile Menu Button - Hidden when menu is open */}
-            <button
-              className={`md:hidden text-gray-300 hover:text-white transition-all duration-300 z-50 relative p-2 -mr-2 ${isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-                }`}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={isMobileMenuOpen}
-            >
-              <Menu size={24} className="transition-transform duration-300" />
-            </button>
+            <div className="flex items-center gap-4 md:hidden">
+              <ThemeToggle />
+              <button
+                className={`text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-all duration-300 z-50 relative p-2 -mr-2 ${isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+                  }`}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle menu"
+                aria-expanded={isMobileMenuOpen}
+              >
+                <Menu size={24} className="transition-transform duration-300" />
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -172,12 +177,12 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-[#0a0a0a]/95 backdrop-blur-xl border-l border-white/10 shadow-2xl"
+              className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-l border-gray-200 dark:border-white/10 shadow-2xl"
             >
               <div className="flex flex-col h-full pt-20 px-6">
                 {/* Close Button */}
                 <button
-                  className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors p-2"
+                  className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors p-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                   aria-label="Close menu"
                 >
@@ -199,8 +204,8 @@ export default function Navbar() {
                         className={cn(
                           "group relative block py-4 px-4 rounded-lg border border-transparent transition-all duration-200",
                           pathname === link.href
-                            ? "bg-blue-600/10 border-blue-600/20 text-blue-400"
-                            : "text-gray-300 hover:text-white hover:bg-white/5 hover:border-white/10"
+                            ? "bg-blue-50 dark:bg-blue-600/10 border-blue-100 dark:border-blue-600/20 text-blue-600 dark:text-blue-400"
+                            : "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 hover:border-gray-100 dark:hover:border-white/10"
                         )}
                       >
                         <span className="relative z-10 text-lg font-medium">
@@ -212,9 +217,9 @@ export default function Navbar() {
                 </nav>
 
                 {/* Footer Info */}
-                <div className="mt-auto pb-8 pt-8 border-t border-white/10">
+                <div className="mt-auto pb-8 pt-8 border-t border-gray-200 dark:border-white/10">
                   <div className="text-sm text-gray-500 space-y-2">
-                    <p className="font-medium text-gray-400">M Mohamed Asath</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-400">M Mohamed Asath</p>
                     <p>Associate Software Engineer</p>
                   </div>
                 </div>

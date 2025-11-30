@@ -53,7 +53,7 @@ export default function Hero() {
               <img
                 src={user.avatar_url}
                 alt="Mohamed Asath"
-                className="relative w-32 h-32 rounded-full mx-auto border-4 border-black shadow-2xl"
+                className="relative w-32 h-32 rounded-full mx-auto border-4 border-white dark:border-black shadow-2xl"
               />
             </div>
           )}
@@ -63,7 +63,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-4 tracking-tight"
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight"
         >
           M Mohamed <span className="text-gradient">Asath</span>
         </motion.h1>
@@ -72,7 +72,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl sm:text-2xl text-blue-400 mb-6 font-medium"
+          className="text-xl sm:text-2xl text-blue-600 dark:text-blue-400 mb-6 font-medium"
         >
           Associate Software Engineer
         </motion.p>
@@ -81,7 +81,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed"
+          className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed"
         >
           Associate Software Engineer at IFS with 1+ year of experience, specializing in full-stack development, database management, and cloud architecture. Pursuing BSc in Software Engineering at SLIIT (CGPA 3.7).
         </motion.p>
@@ -121,17 +121,17 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="flex items-center justify-center gap-8 text-sm text-gray-500 mb-8"
+          className="flex items-center justify-center gap-8 text-sm text-gray-600 dark:text-gray-500 mb-8"
         >
           {user && (
             <>
               <div className="flex flex-col items-center">
-                <span className="text-2xl font-bold text-white">{user.public_repos}</span>
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">{user.public_repos}</span>
                 <span>Repositories</span>
               </div>
-              <div className="w-px h-8 bg-gray-800" />
+              <div className="w-px h-8 bg-gray-300 dark:bg-gray-800" />
               <div className="flex flex-col items-center">
-                <span className="text-2xl font-bold text-white">{user.followers}</span>
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">{user.followers}</span>
                 <span>Followers</span>
               </div>
             </>
@@ -143,7 +143,7 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.8 }}
           onClick={() => scrollToSection("#about")}
-          className="text-gray-500 hover:text-blue-400 transition-colors animate-bounce absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors animate-bounce absolute bottom-8 left-1/2 -translate-x-1/2"
           aria-label="Scroll to about section"
         >
           <ArrowDown size={24} />

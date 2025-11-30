@@ -24,10 +24,10 @@ export default function ProjectCard({
     <motion.div
       whileHover={{ y: -5 }}
       transition={{ type: "spring", stiffness: 300 }}
-      className="group bg-[#111111]/80 backdrop-blur-sm border border-gray-800 rounded-xl p-6 transition-all duration-300 hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/20 h-full flex flex-col"
+      className="group bg-white/80 dark:bg-[#111111]/80 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-xl p-6 transition-all duration-300 hover:border-blue-500 dark:hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20 h-full flex flex-col"
     >
       <div className="flex items-start justify-between mb-4">
-        <h3 className="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors flex-1 pr-2">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex-1 pr-2">
           {name}
         </h3>
         <div className="flex gap-2 flex-shrink-0">
@@ -35,7 +35,7 @@ export default function ProjectCard({
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-blue-400 transition-colors"
+            className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             aria-label="View on GitHub"
             onClick={(e) => e.stopPropagation()}
           >
@@ -46,7 +46,7 @@ export default function ProjectCard({
               href={homepage}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-blue-400 transition-colors"
+              className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               aria-label="View live site"
               onClick={(e) => e.stopPropagation()}
             >
@@ -56,17 +56,17 @@ export default function ProjectCard({
         </div>
       </div>
       {description && (
-        <p className="text-gray-400 mb-4 line-clamp-3 flex-1">{description}</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-1">{description}</p>
       )}
       <div className="flex items-center justify-between mt-auto pt-4">
         {language && (
-          <span className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full text-xs font-medium border border-blue-600/30">
+          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-600/20 text-blue-700 dark:text-blue-400 rounded-full text-xs font-medium border border-blue-200 dark:border-blue-600/30">
             {language}
           </span>
         )}
-        <div className="flex items-center gap-1.5 text-gray-400 text-sm">
+        <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 text-sm">
           <svg
-            className="w-4 h-4 fill-yellow-400/80"
+            className="w-4 h-4 fill-yellow-500 dark:fill-yellow-400/80"
             viewBox="0 0 24 24"
             aria-hidden="true"
           >

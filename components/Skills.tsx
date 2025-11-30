@@ -73,13 +73,13 @@ export default function Skills() {
     <section
       ref={sectionRef}
       id="skills"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a]/30 backdrop-blur-sm fade-in-section"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-[#0a0a0a]/30 backdrop-blur-sm fade-in-section"
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-4">Skills & Technologies</h2>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Skills & Technologies</h2>
           <div className="w-24 h-1 bg-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Technologies and tools I work with to build modern web applications
           </p>
         </div>
@@ -87,14 +87,14 @@ export default function Skills() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {skills.map((skillGroup, index) => (
             <Card key={index} hover>
-              <h3 className="text-xl font-semibold text-white mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                 {skillGroup.category}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {skillGroup.technologies.map((tech, techIndex) => (
                   <span
                     key={techIndex}
-                    className="px-3 py-1.5 bg-blue-600/20 text-blue-400 rounded-lg text-sm font-medium border border-blue-600/30"
+                    className="px-3 py-1.5 bg-blue-100 dark:bg-blue-600/20 text-blue-700 dark:text-blue-400 rounded-lg text-sm font-medium border border-blue-200 dark:border-blue-600/30"
                   >
                     {tech}
                   </span>

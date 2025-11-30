@@ -14,7 +14,7 @@ export default function Experience() {
     <section
       ref={sectionRef}
       id="experience"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a]/30 backdrop-blur-sm fade-in-section"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-[#0a0a0a]/30 backdrop-blur-sm fade-in-section"
     >
       <div className="max-w-4xl mx-auto">
         <motion.h2
@@ -22,7 +22,7 @@ export default function Experience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-white mb-4 text-center"
+          className="text-4xl font-bold text-gray-900 dark:text-white mb-4 text-center"
         >
           Experience & Education
         </motion.h2>
@@ -73,24 +73,24 @@ export default function Experience() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <Card hover>
-              <h3 className="text-xl font-semibold text-white mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Key Achievements
               </h3>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-600 dark:text-gray-400">
                 <li className="flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span>Dean's List Recognition - Year 2 Semester 2, SLIIT</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span>Batch Representative - SLIIT Software Engineering</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span>Winner - Mini Hackathon, Microsoft Club SLIIT</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span>Published NPM package - KubeMCP</span>
                 </li>
               </ul>
@@ -103,24 +103,24 @@ export default function Experience() {
             transition={{ duration: 0.5, delay: 0.5 }}
           >
             <Card hover>
-              <h3 className="text-xl font-semibold text-white mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Leadership Roles
               </h3>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-600 dark:text-gray-400">
                 <li className="flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span>Secretary & Dev Team - SLIIT FOSS Community</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span>Secretary & Dev Team - Mozilla Campus Club SLIIT</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span>Team Leader - AIESEC in SLIIT (oGTe)</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span>Committee Member - Faculty of Computing Students Community</span>
                 </li>
               </ul>
