@@ -46,7 +46,7 @@ export async function sendMagicLinkEmail(email: string, url: string) {
             <a href="${url}" class="button">Sign In</a>
             <p>Or copy and paste this link into your browser:</p>
             <p style="word-break: break-all; color: #666;">${url}</p>
-            <p>This link will expire in 24 hours.</p>
+            <p>This link will expire in 15 minutes.</p>
             <div class="footer">
               <p>If you didn't request this email, please ignore it.</p>
             </div>
@@ -54,7 +54,7 @@ export async function sendMagicLinkEmail(email: string, url: string) {
         </body>
       </html>
     `,
-    text: `Sign in to Admin Dashboard\n\nClick this link to sign in: ${url}\n\nThis link will expire in 24 hours.`,
+    text: `Sign in to Admin Dashboard\n\nClick this link to sign in: ${url}\n\nThis link will expire in 15 minutes.`,
   };
 
   try {

@@ -1,69 +1,57 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft, Copy, Check } from "lucide-react";
-import Button from "@/components/ui/Button";
 
 export default function ColorConverterPage() {
   const [hex, setHex] = useState("#3b82f6");
-  const [rgb, setRgb] = useState("rgb(59, 130, 246)");
-  const [hsl, setHsl] = useState("hsl(217, 91%, 60%)");
   const [copied, setCopied] = useState("");
-  const [rgbValues, setRgbValues] = useState({ r: 59, g: 130, b: 246 });
 
-  const hexToRgb = (hex: string) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const hexToRgb = (h: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
     if (result) {
-      const r = parseInt(result[1], 16);
-      const g = parseInt(result[2], 16);
-      const b = parseInt(result[3], 16);
-      return { r, g, b };
+      return {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      };
     }
     return null;
   };
 
   const rgbToHsl = (r: number, g: number, b: number) => {
-    r /= 255;
-    g /= 255;
-    b /= 255;
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h = 0,
-      s = 0,
-      l = (max + min) / 2;
+    const rn = r / 255;
+    const gn = g / 255;
+    const bn = b / 255;
+    const max = Math.max(rn, gn, bn);
+    const min = Math.min(rn, gn, bn);
+    let h = 0;
+    let s = 0;
+    const l = (max + min) / 2;
 
     if (max !== min) {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
       switch (max) {
-        case r:
-          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        case rn:
+          h = ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6;
           break;
-        case g:
-          h = ((b - r) / d + 2) / 6;
+        case gn:
+          h = ((bn - rn) / d + 2) / 6;
           break;
-        case b:
-          h = ((r - g) / d + 4) / 6;
+        case bn:
+          h = ((rn - gn) / d + 4) / 6;
           break;
       }
     }
 
-    h = Math.round(h * 360);
-    s = Math.round(s * 100);
-    l = Math.round(l * 100);
-
-    return `hsl(${h}, ${s}%, ${l}%)`;
+    return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
   };
 
-  useEffect(() => {
-    const rgb = hexToRgb(hex);
-    if (rgb) {
-      setRgbValues(rgb);
-      setRgb(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`);
-      setHsl(rgbToHsl(rgb.r, rgb.g, rgb.b));
-    }
-  }, [hex]);
+  const rgbValues = useMemo(() => hexToRgb(hex) ?? { r: 59, g: 130, b: 246 }, [hex]);
+  const rgb = `rgb(${rgbValues.r}, ${rgbValues.g}, ${rgbValues.b})`;
+  const hsl = rgbToHsl(rgbValues.r, rgbValues.g, rgbValues.b);
 
   const handleHexChange = (value: string) => {
     if (value.length <= 7) {
@@ -72,17 +60,13 @@ export default function ColorConverterPage() {
   };
 
   const handleRgbChange = (value: string) => {
-    setRgb(value);
     const match = value.match(/\d+/g);
     if (match && match.length === 3) {
       const r = parseInt(match[0]);
       const g = parseInt(match[1]);
       const b = parseInt(match[2]);
       if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
-        setRgbValues({ r, g, b });
-        const hexValue = `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
-        setHex(hexValue);
-        setHsl(rgbToHsl(r, g, b));
+        setHex(`#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`);
       }
     }
   };

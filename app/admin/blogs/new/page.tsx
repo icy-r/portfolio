@@ -10,12 +10,30 @@ export default function NewBlogPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     title: "",
+    slug: "",
     excerpt: "",
     content: "",
     date: new Date().toISOString().split("T")[0],
     published: false,
   });
   const [isSaving, setIsSaving] = useState(false);
+
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+  };
+
+  const handleTitleChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      title: value,
+      slug: prev.slug === generateSlug(prev.title) || prev.slug === ""
+        ? generateSlug(value)
+        : prev.slug,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,15 +43,19 @@ export default function NewBlogPage() {
       const res = await fetch("/api/blogs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          slug: formData.slug || generateSlug(formData.title),
+        }),
       });
 
       if (res.ok) {
         router.push("/admin");
       } else {
-        alert("Failed to create blog post");
+        const data = await res.json().catch(() => null);
+        alert(data?.error || "Failed to create blog post");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setIsSaving(false);
@@ -55,23 +77,40 @@ export default function NewBlogPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="new-title" className="block text-sm font-medium text-gray-300 mb-2">
               Title
             </label>
             <input
+              id="new-title"
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) => handleTitleChange(e.target.value)}
               className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="new-slug" className="block text-sm font-medium text-gray-300 mb-2">
+              Slug
+            </label>
+            <input
+              id="new-slug"
+              type="text"
+              value={formData.slug}
+              onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+              className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+              placeholder="auto-generated-from-title"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="new-excerpt" className="block text-sm font-medium text-gray-300 mb-2">
               Excerpt
             </label>
             <textarea
+              id="new-excerpt"
               value={formData.excerpt}
               onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
               className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
@@ -81,10 +120,11 @@ export default function NewBlogPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="new-content" className="block text-sm font-medium text-gray-300 mb-2">
               Content (Markdown supported)
             </label>
             <textarea
+              id="new-content"
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 rounded-lg text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
@@ -95,10 +135,11 @@ export default function NewBlogPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="new-date" className="block text-sm font-medium text-gray-300 mb-2">
                 Date
               </label>
               <input
+                id="new-date"
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}

@@ -18,7 +18,7 @@ export default function Base64Page() {
       } else {
         setOutput(atob(input));
       }
-    } catch (e) {
+    } catch {
       setOutput("Invalid input");
     }
   };

@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Button from "./ui/Button";
 import { Github, Download, ArrowDown } from "lucide-react";
-import { fetchGitHubUser, type GitHubUser } from "@/lib/github";
+import { type GitHubUser } from "@/lib/github";
 import { motion } from "framer-motion";
 
 export default function Hero() {
   const [user, setUser] = useState<GitHubUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadUser() {
@@ -18,8 +18,6 @@ export default function Hero() {
         setUser(data);
       } catch (error) {
         console.error("Failed to load user data:", error);
-      } finally {
-        setIsLoading(false);
       }
     }
     loadUser();
@@ -50,9 +48,11 @@ export default function Hero() {
           {user?.avatar_url && (
             <div className="relative inline-block group">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
-              <img
+              <Image
                 src={user.avatar_url}
                 alt="Mohamed Asath"
+                width={128}
+                height={128}
                 className="relative w-32 h-32 rounded-full mx-auto border-4 border-white dark:border-black shadow-2xl"
               />
             </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
@@ -20,7 +19,6 @@ import {
   Home,
   Star,
   Search,
-  Filter,
   ArrowUpDown,
 } from "lucide-react";
 
@@ -59,8 +57,6 @@ export default function AdminDashboard() {
     message: string;
     onConfirm: () => void;
   }>({ isOpen: false, title: "", message: "", onConfirm: () => { } });
-  const router = useRouter();
-
   useEffect(() => {
     fetchData();
   }, []);

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import PinnedRepo from "@/models/PinnedRepo";
+import { auth } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET() {
     try {
@@ -17,6 +18,11 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+    const session = await auth();
+    if (!session) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const repos = await req.json();
 

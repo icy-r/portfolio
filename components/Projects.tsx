@@ -20,7 +20,12 @@ export default function Projects() {
         ]);
 
         const reposData: GitHubRepo[] = await reposRes.json();
-        const pinnedIds: number[] = await pinnedRes.json();
+        const pinnedData = await pinnedRes.json();
+        const pinnedIds: number[] = Array.isArray(pinnedData)
+          ? pinnedData
+              .map((p: { repoId?: number }) => p.repoId)
+              .filter((id): id is number => typeof id === "number")
+          : [];
 
         // Filter repos to only show pinned ones, or show pinned first
         // If pinned IDs exist, show those. If not, show latest 6.

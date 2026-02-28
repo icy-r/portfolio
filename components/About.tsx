@@ -25,7 +25,7 @@ export default function About() {
             Associate Software Engineer with 1+ year of experience at IFS, specializing in full-stack development, database management, and cloud architecture. Currently pursuing BSc in Software Engineering at SLIIT with a CGPA of 3.7.
           </p>
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-            Proven track record in developing scalable applications using MERN stack, Docker, and Kubernetes. Active contributor to open-source projects with strong leadership experience. Delivered enterprise-grade solutions while maintaining academic excellence, including Dean's List recognition.
+            Proven track record in developing scalable applications using MERN stack, Docker, and Kubernetes. Active contributor to open-source projects with strong leadership experience. Delivered enterprise-grade solutions while maintaining academic excellence, including Dean&apos;s List recognition.
           </p>
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
             Currently working at IFS, developing and maintaining enterprise-grade software solutions using Oracle Database and server-side technologies for international clients. Passionate about building innovative solutions and contributing to the open-source community.

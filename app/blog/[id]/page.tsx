@@ -3,11 +3,21 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import Button from "@/components/ui/Button";
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 async function getBlog(id: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/blogs?id=${id}&published=true`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/blogs?id=${encodeURIComponent(id)}&published=true`,
+      { cache: "no-store" }
+    );
     if (!res.ok) return null;
     return await res.json();
   } catch {
@@ -18,9 +28,10 @@ async function getBlog(id: string) {
 export default async function BlogPostPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const blog = await getBlog(params.id);
+  const { id } = await params;
+  const blog = await getBlog(id);
 
   if (!blog) {
     notFound();
@@ -55,19 +66,20 @@ export default async function BlogPostPage({
               __html: blog.content
                 .split("\n")
                 .map((line: string) => {
+                  const escaped = escapeHtml(line);
                   if (line.startsWith("# ")) {
-                    return `<h1 class="text-3xl font-bold text-white mt-8 mb-4">${line.slice(2)}</h1>`;
+                    return `<h1 class="text-3xl font-bold text-white mt-8 mb-4">${escapeHtml(line.slice(2))}</h1>`;
                   }
                   if (line.startsWith("## ")) {
-                    return `<h2 class="text-2xl font-bold text-white mt-6 mb-3">${line.slice(3)}</h2>`;
+                    return `<h2 class="text-2xl font-bold text-white mt-6 mb-3">${escapeHtml(line.slice(3))}</h2>`;
                   }
                   if (line.startsWith("### ")) {
-                    return `<h3 class="text-xl font-semibold text-white mt-4 mb-2">${line.slice(4)}</h3>`;
+                    return `<h3 class="text-xl font-semibold text-white mt-4 mb-2">${escapeHtml(line.slice(4))}</h3>`;
                   }
                   if (line.trim() === "") {
                     return "<br />";
                   }
-                  return `<p class="mb-4 leading-relaxed">${line}</p>`;
+                  return `<p class="mb-4 leading-relaxed">${escaped}</p>`;
                 })
                 .join(""),
             }}

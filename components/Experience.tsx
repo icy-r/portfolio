@@ -79,7 +79,7 @@ export default function Experience() {
               <ul className="space-y-2 text-gray-600 dark:text-gray-400">
                 <li className="flex items-start">
                   <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Dean's List Recognition - Year 2 Semester 2, SLIIT</span>
+                  <span>Dean&apos;s List Recognition - Year 2 Semester 2, SLIIT</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>

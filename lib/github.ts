@@ -65,7 +65,7 @@ export async function fetchPinnedRepos(): Promise<number[]> {
     });
     if (!response.ok) return [];
     return response.json();
-  } catch (error) {
+  } catch {
     return [];
   }
 }

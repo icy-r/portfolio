@@ -1,11 +1,28 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Blog from "@/models/Blog";
+import { auth } from "@/app/api/auth/[...nextauth]/route";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    const publishedOnly = searchParams.get("published") === "true";
+
     await dbConnect();
-    const blogs = await Blog.find({}).sort({ date: -1 });
+
+    if (id) {
+      const query: Record<string, unknown> = { _id: id };
+      if (publishedOnly) query.published = true;
+      const blog = await Blog.findOne(query);
+      if (!blog) {
+        return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+      }
+      return NextResponse.json(blog);
+    }
+
+    const filter = publishedOnly ? { published: true } : {};
+    const blogs = await Blog.find(filter).sort({ date: -1 });
     return NextResponse.json(blogs);
   } catch (error) {
     console.error("Error fetching blogs:", error);
@@ -17,8 +34,13 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const { title, slug, excerpt, content, date, tags } = await req.json();
+    const { title, slug, excerpt, content, date, tags, published } = await req.json();
 
     if (!title || !slug || !excerpt || !content || !date) {
       return NextResponse.json(
@@ -36,6 +58,7 @@ export async function POST(req: Request) {
       content,
       date,
       tags: tags || [],
+      published: published ?? false,
     });
 
     return NextResponse.json(newBlog, { status: 201 });
@@ -49,6 +72,11 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -74,8 +102,13 @@ export async function DELETE(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const { id, published, ...updates } = await req.json();
+    const { id, ...updates } = await req.json();
 
     if (!id) {
       return NextResponse.json(
@@ -86,13 +119,9 @@ export async function PUT(req: Request) {
 
     await dbConnect();
 
-    // If published status is being toggled, handle it specifically
-    // Otherwise update other fields
-    const updateData = published !== undefined ? { published } : updates;
-
     const updatedBlog = await Blog.findByIdAndUpdate(
       id,
-      updateData,
+      updates,
       { new: true }
     );
 

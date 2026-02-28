@@ -4,15 +4,31 @@
 import crypto from "crypto";
 
 // Admin email (single email from env)
-const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "asath12882@gmail.com").toLowerCase().trim();
+const ADMIN_EMAIL = (() => {
+  const email = process.env.ADMIN_EMAIL;
+  if (!email) {
+    throw new Error("ADMIN_EMAIL environment variable is required");
+  }
+  return email.toLowerCase().trim();
+})();
 
 // Secret for signing tokens (use NEXTAUTH_SECRET or generate one)
-const TOKEN_SECRET = process.env.NEXTAUTH_SECRET || process.env.TOKEN_SECRET || "change-this-secret-in-production";
+const TOKEN_SECRET = (() => {
+  const secret = process.env.NEXTAUTH_SECRET || process.env.TOKEN_SECRET;
+  if (!secret) {
+    throw new Error("NEXTAUTH_SECRET or TOKEN_SECRET environment variable is required");
+  }
+  return secret;
+})();
 
-// Store verified emails temporarily (for NextAuth authorize)
-// Note: This is in-memory, so it won't persist across serverless function invocations
-// In production, use Redis or database
-const verifiedEmails = new Map<string, number>();
+// Store verified emails temporarily (for NextAuth authorize).
+// Uses global to persist across hot reloads in dev and within the same
+// serverless instance. For multi-instance production, the cookie fallback
+// in verify-login ensures the flow still works.
+declare global {
+  var _verifiedEmails: Map<string, number> | undefined;
+}
+const verifiedEmails: Map<string, number> = global._verifiedEmails ??= new Map();
 
 // Generate a signed token for email verification
 export function generateLoginToken(email: string): string {

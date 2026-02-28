@@ -20,10 +20,6 @@ export default function EditBlogPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    fetchBlog();
-  }, [id]);
-
   const fetchBlog = async () => {
     try {
       const res = await fetch(`/api/blogs?id=${id}`);
@@ -44,6 +40,10 @@ export default function EditBlogPage() {
     }
   };
 
+  useEffect(() => {
+    fetchBlog();
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -60,7 +60,7 @@ export default function EditBlogPage() {
       } else {
         alert("Failed to update blog post");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setIsSaving(false);
@@ -90,10 +90,11 @@ export default function EditBlogPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="edit-title" className="block text-sm font-medium text-gray-300 mb-2">
               Title
             </label>
             <input
+              id="edit-title"
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -103,10 +104,11 @@ export default function EditBlogPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="edit-excerpt" className="block text-sm font-medium text-gray-300 mb-2">
               Excerpt
             </label>
             <textarea
+              id="edit-excerpt"
               value={formData.excerpt}
               onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
               className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
@@ -116,10 +118,11 @@ export default function EditBlogPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="edit-content" className="block text-sm font-medium text-gray-300 mb-2">
               Content (Markdown supported)
             </label>
             <textarea
+              id="edit-content"
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 rounded-lg text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
@@ -130,10 +133,11 @@ export default function EditBlogPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="edit-date" className="block text-sm font-medium text-gray-300 mb-2">
                 Date
               </label>
               <input
+                id="edit-date"
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { Send } from "lucide-react";
 
@@ -71,7 +72,7 @@ export default function LoginPage() {
           setLoginUrl(data.loginUrl);
         }
       }
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -143,12 +144,12 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-6 text-center">
-            <a
+            <Link
               href="/"
               className="text-gray-400 hover:text-blue-400 text-sm transition-colors"
             >
               ← Back to Portfolio
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ export interface IBlog extends Document {
     content: string;
     date: string;
     tags: string[];
+    published: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -19,6 +20,7 @@ const BlogSchema: Schema = new Schema(
         content: { type: String, required: true },
         date: { type: String, required: true },
         tags: { type: [String], default: [] },
+        published: { type: Boolean, default: false },
     },
     { timestamps: true }
 );

@@ -68,7 +68,7 @@ export default function Contact() {
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Get In Touch</h2>
           <div className="w-24 h-1 bg-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            I'm always open to discussing new projects, opportunities, or just
+            I&apos;m always open to discussing new projects, opportunities, or just
             having a chat about technology!
           </p>
         </div>

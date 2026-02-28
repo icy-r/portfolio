@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Contact from "@/models/Contact";
+import { auth } from "@/app/api/auth/[...nextauth]/route";
 
 export async function POST(req: Request) {
   try {
@@ -35,6 +36,11 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     await dbConnect();
     const contacts = await Contact.find({}).sort({ createdAt: -1 });
@@ -60,6 +66,11 @@ export async function GET() {
 }
 
 export async function DELETE(req: Request) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -85,6 +96,11 @@ export async function DELETE(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { id, read } = await req.json();
 

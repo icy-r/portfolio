@@ -16,7 +16,7 @@ export default function JSONFormatterPage() {
       const parsed = JSON.parse(input);
       setOutput(JSON.stringify(parsed, null, 2));
       setError("");
-    } catch (e) {
+    } catch {
       setError("Invalid JSON");
       setOutput("");
     }

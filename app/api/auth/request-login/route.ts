@@ -36,13 +36,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For development/testing: return the link if email service is not configured
-    if (!process.env.EMAIL_SERVER_USER) {
+    if (!process.env.EMAIL_SERVER_USER && process.env.NODE_ENV !== "production") {
       return NextResponse.json({
         message: "Email service not configured. Use this link to login:",
-        loginUrl, // Only return in development
+        loginUrl,
         note: "In production, configure EMAIL_SERVER_* environment variables",
       });
+    }
+
+    if (!process.env.EMAIL_SERVER_USER) {
+      return NextResponse.json(
+        { error: "Email service is not configured. Please contact the administrator." },
+        { status: 503 }
+      );
     }
 
     return NextResponse.json({

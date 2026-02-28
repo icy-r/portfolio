@@ -9,7 +9,7 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 
 export default function ManageRepos() {
     const [repos, setRepos] = useState<GitHubRepo[]>([]);
-    const [pinnedIds, setPinnedIds] = useState<number[]>([]);
+    const [pinnedIds, setPinnedIds] = useState<Set<number>>(new Set());
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,7 +26,19 @@ export default function ManageRepos() {
                 const pinnedData = await pinnedRes.json();
 
                 setRepos(reposData);
-                setPinnedIds(pinnedData);
+                const raw: unknown[] = Array.isArray(pinnedData) ? pinnedData : [];
+                const ids = raw
+                    .map((p) => {
+                        if (typeof p === "number") return p;
+                        if (typeof p === "object" && p !== null) {
+                            const obj = p as Record<string, unknown>;
+                            return (typeof obj.repoId === "number" ? obj.repoId : undefined)
+                                ?? (typeof obj.id === "number" ? obj.id : undefined);
+                        }
+                        return undefined;
+                    })
+                    .filter((id): id is number => typeof id === "number");
+                setPinnedIds(new Set(ids));
             } catch (error) {
                 console.error("Failed to fetch data:", error);
             } finally {
@@ -37,9 +49,15 @@ export default function ManageRepos() {
     }, []);
 
     const togglePin = (id: number) => {
-        setPinnedIds((prev) =>
-            prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
-        );
+        setPinnedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) {
+                next.delete(id);
+            } else {
+                next.add(id);
+            }
+            return next;
+        });
     };
 
     const handleSaveClick = () => {
@@ -49,10 +67,20 @@ export default function ManageRepos() {
     const handleConfirmSave = async () => {
         setIsSaving(true);
         try {
+            const pinnedRepos = repos
+                .filter((r) => pinnedIds.has(r.id))
+                .map((r) => ({
+                    id: r.id,
+                    name: r.name,
+                    description: r.description || "",
+                    url: r.html_url,
+                    stars: r.stargazers_count,
+                    language: r.language || "",
+                }));
             const res = await fetch("/api/admin/pinned-repos", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(pinnedIds),
+                body: JSON.stringify(pinnedRepos),
             });
 
             if (res.ok) {
@@ -105,7 +133,7 @@ export default function ManageRepos() {
                 {repos.map((repo) => (
                     <div
                         key={repo.id}
-                        className={`p-4 rounded-xl border transition-all cursor-pointer ${pinnedIds.includes(repo.id)
+                        className={`p-4 rounded-xl border transition-all cursor-pointer ${pinnedIds.has(repo.id)
                             ? "bg-blue-900/20 border-blue-500"
                             : "bg-[#111111] border-gray-800 hover:border-gray-600"
                             }`}
@@ -118,7 +146,7 @@ export default function ManageRepos() {
                             <Star
                                 size={20}
                                 className={
-                                    pinnedIds.includes(repo.id)
+                                    pinnedIds.has(repo.id)
                                         ? "fill-yellow-400 text-yellow-400"
                                         : "text-gray-600"
                                 }
@@ -140,7 +168,7 @@ export default function ManageRepos() {
                 onClose={() => setIsModalOpen(false)}
                 onConfirm={handleConfirmSave}
                 title="Save Changes?"
-                message={`Are you sure you want to save the selected repositories? You have selected ${pinnedIds.length} repositories to be displayed on your portfolio.`}
+                message={`Are you sure you want to save the selected repositories? You have selected ${pinnedIds.size} repositories to be displayed on your portfolio.`}
                 confirmText="Save Changes"
                 isLoading={isSaving}
             />

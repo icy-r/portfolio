@@ -3,6 +3,10 @@ import { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+const MotionLink = motion.create(Link);
+const MotionA = motion.create("a");
+const MotionButton = motion.create("button");
+
 interface ButtonProps {
   children: ReactNode;
   href?: string;
@@ -41,10 +45,6 @@ export default function Button({
   };
 
   const combinedClassName = cn(baseStyles, variants[variant], className, disabled && "opacity-50 cursor-not-allowed");
-
-  const MotionLink = motion.create(Link);
-  const MotionA = motion.create("a");
-  const MotionButton = motion.create("button");
 
   const hoverProps = {
     whileHover: { scale: 1.02 },
