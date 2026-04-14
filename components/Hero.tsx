@@ -19,11 +19,11 @@ interface HeroProps {
 export default function Hero({ avatarUrl }: HeroProps) {
   const { scrollY } = useScroll();
 
-  // Parallax and fade effects on scroll
-  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
-  const heroY = useTransform(scrollY, [0, 500], [0, -100]);
-  const ctaOpacity = useTransform(scrollY, [0, 250], [1, 0]);
-  const ctaScale = useTransform(scrollY, [0, 250], [1, 0.9]);
+  // Parallax and fade effects on scroll — longer range so content doesn't vanish too fast on mobile
+  const heroOpacity = useTransform(scrollY, [0, 800], [1, 0]);
+  const heroY = useTransform(scrollY, [0, 800], [0, -80]);
+  const ctaOpacity = useTransform(scrollY, [100, 500], [1, 0]);
+  const ctaScale = useTransform(scrollY, [100, 500], [1, 0.95]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);

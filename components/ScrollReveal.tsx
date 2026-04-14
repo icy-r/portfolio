@@ -60,16 +60,20 @@ export default function ScrollReveal({
 
     gsap.set(el, initial);
 
-    // "play reverse play reverse" = play on enter, reverse on leave, replay on re-enter
+    // "play none none reverse":
+    //   onEnter: play (animate in)
+    //   onLeave: none (stay visible when scrolled past)
+    //   onEnterBack: none (stay visible when scrolling back)
+    //   onLeaveBack: reverse (hide when scrolling above it — allows re-trigger on next scroll down)
     const tween = gsap.to(el, {
       ...animate,
       scrollTrigger: {
         trigger: el,
-        start: "top 88%",
-        end: "top 15%",
+        start: "top 90%",
+        end: "top 10%",
         toggleActions: once
           ? "play none none none"
-          : "play reverse play reverse",
+          : "play none none reverse",
       },
     });
 
