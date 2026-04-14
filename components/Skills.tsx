@@ -1,111 +1,66 @@
 "use client";
 
-import { useRef } from "react";
-import { useIntersectionObserver } from "@/lib/hooks";
-import Card from "./ui/Card";
+import ScrollReveal from "./ScrollReveal";
+import PretextSectionTitle from "./PretextSectionTitle";
 
 const skills = [
-  {
-    category: "Languages",
-    technologies: [
-      "JavaScript",
-      "TypeScript",
-      "Java",
-      "Python",
-      "SQL",
-      "Kotlin",
-    ],
-  },
-  {
-    category: "Frontend",
-    technologies: [
-      "React.js",
-      "Vue.js",
-      "HTML5",
-      "CSS3",
-      "Vite",
-      "Next.js",
-    ],
-  },
-  {
-    category: "Backend",
-    technologies: [
-      "Node.js",
-      "Express.js",
-      "RESTful APIs",
-    ],
-  },
-  {
-    category: "Databases",
-    technologies: [
-      "MongoDB",
-      "Oracle Database",
-      "SQL",
-      "MySQL",
-    ],
-  },
-  {
-    category: "DevOps & Cloud",
-    technologies: [
-      "Docker",
-      "Kubernetes",
-      "Git",
-      "Linux",
-      "Cloud Architecture",
-    ],
-  },
-  {
-    category: "Tools & Methodologies",
-    technologies: [
-      "Agile",
-      "Version Control",
-      "MCP",
-      "CI/CD",
-    ],
-  },
+  { category: "Languages", items: ["JavaScript", "TypeScript", "Java", "Python", "SQL", "Kotlin"] },
+  { category: "Frontend", items: ["React.js", "Next.js", "Vue.js", "HTML5", "CSS3", "Vite"] },
+  { category: "Backend", items: ["Node.js", "Express.js", "RESTful APIs"] },
+  { category: "Databases", items: ["MongoDB", "Oracle Database", "MySQL", "SQL"] },
+  { category: "DevOps & Cloud", items: ["Docker", "Kubernetes", "Git", "Linux", "CI/CD"] },
+  { category: "Tools", items: ["Agile", "Version Control", "MCP"] },
 ];
 
 export default function Skills() {
-  const sectionRef = useRef<HTMLElement>(null);
-  useIntersectionObserver(sectionRef, 0.1, "0px");
-
   return (
-    <section
-      ref={sectionRef}
-      id="skills"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-[#0a0a0a]/30 backdrop-blur-sm fade-in-section"
-    >
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Skills & Technologies</h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Technologies and tools I work with to build modern web applications
-          </p>
-        </div>
+    <section id="skills" className="py-40 relative overflow-hidden section-glass">
+      <div className="px-6 lg:px-0 lg:ml-[12vw] lg:mr-[8vw]">
+        <ScrollReveal>
+          <PretextSectionTitle label="Skills" title="Technologies I work with" />
+        </ScrollReveal>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skills.map((skillGroup, index) => (
-            <Card key={index} hover>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                {skillGroup.category}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {skillGroup.technologies.map((tech, techIndex) => (
-                  <span
-                    key={techIndex}
-                    className="px-3 py-1.5 bg-blue-100 dark:bg-blue-600/20 text-blue-700 dark:text-blue-400 rounded-lg text-sm font-medium border border-blue-200 dark:border-blue-600/30"
-                  >
-                    {tech}
+      {/* Horizontal flowing skill ribbons instead of grid boxes */}
+      <div className="mt-16 space-y-0">
+        {skills.map((group, i) => (
+          <ScrollReveal
+            key={group.category}
+            delay={i * 0.06}
+            direction={i % 2 === 0 ? "left" : "right"}
+          >
+            <div className="group border-b border-white/[0.04] hover:bg-white/[0.015] transition-all duration-700">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-0 px-6 lg:px-[12vw] py-6">
+                {/* Category label — fixed width */}
+                <div className="sm:w-48 flex-shrink-0">
+                  <span className="text-[11px] font-semibold text-accent tracking-[0.15em] uppercase">
+                    {group.category}
                   </span>
-                ))}
-              </div>
-            </Card>
-          ))}
-        </div>
+                </div>
 
+                {/* Skills — flow horizontally */}
+                <div className="flex flex-wrap gap-3 flex-1">
+                  {group.items.map((tech) => (
+                    <span
+                      key={tech}
+                      className="text-sm text-muted hover:text-foreground transition-colors duration-300 cursor-default relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-accent/40 hover:after:w-full after:transition-all after:duration-300"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Count */}
+                <div className="hidden lg:block text-right w-12">
+                  <span className="text-xs text-muted/70 tabular-nums">
+                    {String(group.items.length).padStart(2, "0")}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+        ))}
       </div>
     </section>
   );
 }
-

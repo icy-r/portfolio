@@ -1,134 +1,131 @@
 "use client";
 
-import { useRef } from "react";
-import { useIntersectionObserver } from "@/lib/hooks";
-import Card from "./ui/Card";
-import Timeline, { TimelineItem } from "./ui/Timeline";
-import { motion } from "framer-motion";
+import ScrollReveal from "./ScrollReveal";
+import { ScrollParallax } from "./ScrollReveal";
+import PretextSectionTitle from "./PretextSectionTitle";
+
+const timeline = [
+  {
+    title: "Associate Software Engineer",
+    org: "IFS",
+    period: "May 2025 — Present",
+    desc: "Develop and maintain enterprise-grade software solutions using Oracle Database and server-side technologies for international clients.",
+    active: true,
+  },
+  {
+    title: "Software Engineer Intern",
+    org: "IFS",
+    period: "Nov 2024 — Apr 2025",
+    desc: "Gained hands-on experience in enterprise software development. Contributed to IFS Cloud platform modules used by enterprise clients globally.",
+    active: false,
+  },
+  {
+    title: "BSc (Hons) in Software Engineering",
+    org: "SLIIT",
+    period: "Feb 2023 — Aug 2027",
+    desc: "CGPA 3.7/4.0. Dean's List — Year 2 Semester 2. Batch Representative for Software Engineering.",
+    active: false,
+  },
+];
+
+const achievements = [
+  "Dean's List Recognition — Year 2 Semester 2, SLIIT",
+  "Batch Representative — SLIIT Software Engineering",
+  "Winner — Mini Hackathon, Microsoft Club SLIIT",
+  "Published NPM package — KubeMCP",
+];
+
+const leadership = [
+  "Secretary & Dev Team — SLIIT FOSS Community",
+  "Secretary & Dev Team — Mozilla Campus Club SLIIT",
+  "Team Leader — AIESEC in SLIIT (oGTe)",
+  "Committee Member — Faculty of Computing Students Community",
+];
 
 export default function Experience() {
-  const sectionRef = useRef<HTMLElement>(null);
-  useIntersectionObserver(sectionRef, 0.1, "0px");
-
   return (
-    <section
-      ref={sectionRef}
-      id="experience"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-[#0a0a0a]/30 backdrop-blur-sm fade-in-section"
-    >
-      <div className="max-w-4xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-gray-900 dark:text-white mb-4 text-center"
-        >
-          Experience & Education
-        </motion.h2>
-        <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-24 h-1 bg-blue-600 mx-auto mb-12"
-        />
+    <section id="experience" className="py-40 relative overflow-hidden section-glass">
+      <div className="px-6 lg:px-0 lg:ml-[12vw] lg:mr-[8vw]">
+        <ScrollReveal>
+          <PretextSectionTitle label="Experience" title="Experience & Education" />
+        </ScrollReveal>
+      </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <Card>
-            <Timeline>
-              <TimelineItem
-                title="Associate Software Engineer"
-                organization="IFS"
-                period="May 2025 - Present"
-                description="Promoted after completing 6-month internship. Develop and maintain enterprise-grade software solutions using Oracle Database and server-side technologies for international clients. Collaborate with cross-functional teams to deliver scalable applications, improving system efficiency and user experience."
-              />
-              <TimelineItem
-                title="Software Engineer Intern"
-                organization="IFS"
-                period="November 2024 - April 2025"
-                description="Gained hands-on experience in enterprise software development, working with database management systems and real-world production code. Assisted in developing features for IFS Cloud platform, contributing to modules used by enterprise clients globally."
-              />
-              <TimelineItem
-                title="BSc (Hons) in Software Engineering"
-                organization="Sri Lanka Institute of Information Technology (SLIIT)"
-                period="February 2023 - August 2027 (Expected)"
-                description="Pursuing degree with CGPA of 3.7/4.0. Dean's List Recognition - Year 2 Semester 2. Batch Representative for Software Engineering program."
-                isLast
-              />
-            </Timeline>
-          </Card>
-        </motion.div>
+      {/* Timeline — full-width rows */}
+      <div className="mt-16">
+        {timeline.map((item, i) => (
+          <ScrollReveal key={item.title} delay={i * 0.1}>
+            <div className="group border-b border-white/[0.04] hover:bg-white/[0.015] transition-all duration-700">
+              <div className="px-6 lg:px-[12vw] py-10 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
+                {/* Period — left side */}
+                <div className="lg:col-span-3 flex items-start gap-3">
+                  {item.active && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0 animate-pulse" />
+                  )}
+                  {!item.active && (
+                    <span className="w-2 h-2 rounded-full bg-white/[0.1] mt-1.5 flex-shrink-0" />
+                  )}
+                  <div>
+                    <span className="text-[11px] text-muted tracking-wider uppercase block">
+                      {item.period}
+                    </span>
+                    <span className="text-xs text-accent/80 mt-1 block">
+                      {item.org}
+                    </span>
+                  </div>
+                </div>
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <Card hover>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                Key Achievements
-              </h3>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-400">
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Dean&apos;s List Recognition - Year 2 Semester 2, SLIIT</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Batch Representative - SLIIT Software Engineering</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Winner - Mini Hackathon, Microsoft Club SLIIT</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Published NPM package - KubeMCP</span>
-                </li>
-              </ul>
-            </Card>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            <Card hover>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                Leadership Roles
-              </h3>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-400">
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Secretary & Dev Team - SLIIT FOSS Community</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Secretary & Dev Team - Mozilla Campus Club SLIIT</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Team Leader - AIESEC in SLIIT (oGTe)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                  <span>Committee Member - Faculty of Computing Students Community</span>
-                </li>
-              </ul>
-            </Card>
-          </motion.div>
-        </div>
+                {/* Content — right side */}
+                <div className="lg:col-span-9">
+                  <h3 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors duration-300 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-muted leading-relaxed max-w-2xl">
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+
+      {/* Achievements & Leadership — side by side, staggered */}
+      <div className="mt-20 grid grid-cols-1 lg:grid-cols-2">
+        <ScrollReveal delay={0.1} direction="left">
+          <div className="px-6 lg:pl-[12vw] lg:pr-12 py-10 border-b lg:border-b-0 lg:border-r border-white/[0.04]">
+            <h3 className="text-[11px] font-semibold text-accent/80 tracking-[0.15em] uppercase mb-6">
+              Achievements
+            </h3>
+            <ul className="space-y-4">
+              {achievements.map((item, i) => (
+                <ScrollParallax key={item} speed={0.05 * (i + 1)}>
+                  <li className="text-sm text-muted hover:text-foreground transition-colors duration-300 pl-4 border-l border-white/[0.06] hover:border-accent/30">
+                    {item}
+                  </li>
+                </ScrollParallax>
+              ))}
+            </ul>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.25} direction="right">
+          <div className="px-6 lg:pl-12 lg:pr-[8vw] py-10 lg:mt-12">
+            <h3 className="text-[11px] font-semibold text-accent/80 tracking-[0.15em] uppercase mb-6">
+              Leadership
+            </h3>
+            <ul className="space-y-4">
+              {leadership.map((item, i) => (
+                <ScrollParallax key={item} speed={0.05 * (i + 1)}>
+                  <li className="text-sm text-muted hover:text-foreground transition-colors duration-300 pl-4 border-l border-white/[0.06] hover:border-accent/30">
+                    {item}
+                  </li>
+                </ScrollParallax>
+              ))}
+            </ul>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
 }
-

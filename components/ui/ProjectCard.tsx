@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { Github, ExternalLink } from "lucide-react";
+import { Github, ExternalLink, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ProjectCardProps {
@@ -11,6 +13,19 @@ interface ProjectCardProps {
   homepage?: string | null;
 }
 
+const languageColors: Record<string, string> = {
+  TypeScript: "#3178c6",
+  JavaScript: "#f1e05a",
+  Python: "#3572A5",
+  Java: "#b07219",
+  Kotlin: "#A97BFF",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+  Go: "#00ADD8",
+  Rust: "#dea584",
+  Shell: "#89e051",
+};
+
 export default function ProjectCard({
   name,
   description,
@@ -21,58 +36,67 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   return (
     <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ type: "spring", stiffness: 300 }}
-      className="group bg-white/80 dark:bg-[#111111]/80 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-xl p-6 transition-all duration-300 hover:border-blue-500 dark:hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20 h-full flex flex-col"
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="group relative bg-[#0a0a0a]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-6 transition-all duration-500 hover:border-white/[0.12] hover:shadow-[0_0_60px_rgba(167,139,250,0.04)] h-full flex flex-col"
     >
+      {/* Subtle top glow on hover */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent/30 transition-all duration-500" />
+
       <div className="flex items-start justify-between mb-4">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex-1 pr-2">
+        <h3 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors duration-300 flex-1 pr-2">
           {name}
         </h3>
-        <div className="flex gap-2 flex-shrink-0">
+        <div className="flex gap-3 flex-shrink-0">
           <Link
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="text-muted hover:text-foreground transition-colors duration-300"
             aria-label="View on GitHub"
             onClick={(e) => e.stopPropagation()}
           >
-            <Github size={20} />
+            <Github size={18} />
           </Link>
           {homepage && (
             <Link
               href={homepage}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-muted hover:text-foreground transition-colors duration-300"
               aria-label="View live site"
               onClick={(e) => e.stopPropagation()}
             >
-              <ExternalLink size={20} />
+              <ExternalLink size={18} />
             </Link>
           )}
         </div>
       </div>
+
       {description && (
-        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-1">{description}</p>
+        <p className="text-muted text-sm leading-relaxed mb-4 line-clamp-3 flex-1">
+          {description}
+        </p>
       )}
-      <div className="flex items-center justify-between mt-auto pt-4">
+
+      <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/[0.04]">
         {language && (
-          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-600/20 text-blue-700 dark:text-blue-400 rounded-full text-xs font-medium border border-blue-200 dark:border-blue-600/30">
-            {language}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className="w-2.5 h-2.5 rounded-full"
+              style={{
+                backgroundColor: languageColors[language] || "#737373",
+              }}
+            />
+            <span className="text-xs text-muted font-medium">{language}</span>
+          </div>
         )}
-        <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 text-sm">
-          <svg
-            className="w-4 h-4 fill-yellow-500 dark:fill-yellow-400/80"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-          </svg>
-          <span className="font-medium">{stars}</span>
-        </div>
+        {stars > 0 && (
+          <div className="flex items-center gap-1 text-muted text-xs">
+            <Star size={13} className="fill-yellow-500/80 text-yellow-500/80" />
+            <span>{stars}</span>
+          </div>
+        )}
       </div>
     </motion.div>
   );

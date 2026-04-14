@@ -11,7 +11,7 @@ interface ButtonProps {
   children: ReactNode;
   href?: string;
   onClick?: () => void;
-  variant?: "primary" | "secondary" | "outline";
+  variant?: "primary" | "secondary" | "outline" | "ghost";
   className?: string;
   target?: string;
   rel?: string;
@@ -33,27 +33,33 @@ export default function Button({
   disabled = false,
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black";
+    "inline-flex items-center justify-center px-6 py-3 rounded-xl font-medium text-sm tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2 focus:ring-offset-background";
 
   const variants = {
     primary:
-      "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-lg shadow-blue-500/30 dark:shadow-blue-500/50",
+      "bg-accent text-black hover:bg-accent/90 shadow-lg shadow-accent/20",
     secondary:
-      "bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-gray-500 border border-gray-200 dark:border-gray-700",
+      "bg-white/[0.06] text-foreground hover:bg-white/[0.1] border border-white/[0.08]",
     outline:
-      "border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-600 hover:text-blue-600 dark:hover:text-blue-400 focus:ring-blue-500 bg-transparent",
+      "border border-white/[0.12] text-foreground hover:border-accent/50 hover:text-accent bg-transparent",
+    ghost:
+      "text-muted hover:text-foreground bg-transparent",
   };
 
-  const combinedClassName = cn(baseStyles, variants[variant], className, disabled && "opacity-50 cursor-not-allowed");
+  const combinedClassName = cn(
+    baseStyles,
+    variants[variant],
+    disabled && "opacity-40 cursor-not-allowed pointer-events-none",
+    className
+  );
 
   const hoverProps = {
     whileHover: { scale: 1.02 },
     whileTap: { scale: 0.98 },
-    transition: { type: "spring" as const, stiffness: 400, damping: 17 }
+    transition: { type: "spring" as const, stiffness: 400, damping: 17 },
   };
 
   if (href) {
-    // Use regular anchor tag for downloads (Next.js Link doesn't support download attribute)
     if (download) {
       return (
         <MotionA
@@ -95,4 +101,3 @@ export default function Button({
     </MotionButton>
   );
 }
-
