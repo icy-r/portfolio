@@ -5,7 +5,7 @@ import Button from "./ui/Button";
 import Toast from "./ui/Toast";
 import { Mail, Github, Send, Linkedin, Phone, MessageCircle, ArrowUpRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
-import PretextSectionTitle from "./PretextSectionTitle";
+import SectionHeader from "./SectionHeader";
 
 const contactLinks = [
   { icon: Mail, label: "Email", value: "asath12882@gmail.com", href: "mailto:asath12882@gmail.com" },
@@ -54,9 +54,7 @@ export default function Contact() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       <div className="px-6 lg:px-0 lg:ml-[12vw] lg:mr-[8vw]">
-        <ScrollReveal>
-          <PretextSectionTitle label="Contact" title="Get in touch" />
-        </ScrollReveal>
+        <SectionHeader label="Contact" title="Get in touch" />
       </div>
 
       <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-0">

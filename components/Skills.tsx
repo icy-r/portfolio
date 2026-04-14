@@ -1,7 +1,7 @@
 "use client";
 
 import ScrollReveal from "./ScrollReveal";
-import PretextSectionTitle from "./PretextSectionTitle";
+import SectionHeader from "./SectionHeader";
 
 const skills = [
   { category: "Languages", items: ["JavaScript", "TypeScript", "Java", "Python", "SQL", "Kotlin"] },
@@ -16,9 +16,7 @@ export default function Skills() {
   return (
     <section id="skills" className="py-40 relative overflow-hidden section-glass">
       <div className="px-6 lg:px-0 lg:ml-[12vw] lg:mr-[8vw]">
-        <ScrollReveal>
-          <PretextSectionTitle label="Skills" title="Technologies I work with" />
-        </ScrollReveal>
+        <SectionHeader label="Skills" title="Technologies I work with" />
       </div>
 
       {/* Horizontal flowing skill ribbons instead of grid boxes */}

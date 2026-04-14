@@ -6,7 +6,7 @@ import { type GitHubRepo } from "@/lib/github";
 import { Github, ExternalLink, Star, ArrowUpRight } from "lucide-react";
 import Button from "./ui/Button";
 import ScrollReveal from "./ScrollReveal";
-import PretextSectionTitle from "./PretextSectionTitle";
+import SectionHeader from "./SectionHeader";
 
 const languageColors: Record<string, string> = {
   TypeScript: "#3178c6", JavaScript: "#f1e05a", Python: "#3572A5",
@@ -53,9 +53,7 @@ export default function Projects() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       <div className="px-6 lg:px-0 lg:ml-[12vw] lg:mr-[8vw]">
-        <ScrollReveal>
-          <PretextSectionTitle label="Projects" title="Things I've built" />
-        </ScrollReveal>
+        <SectionHeader label="Projects" title="Things I've built" />
       </div>
 
       {/* Projects as full-width rows instead of card grid */}

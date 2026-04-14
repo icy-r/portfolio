@@ -2,7 +2,7 @@
 
 import ScrollReveal from "./ScrollReveal";
 import { ScrollParallax } from "./ScrollReveal";
-import PretextSectionTitle from "./PretextSectionTitle";
+import SectionHeader from "./SectionHeader";
 import { MapPin, GraduationCap, Briefcase } from "lucide-react";
 
 export default function About() {
@@ -12,16 +12,14 @@ export default function About() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       <div className="px-6 lg:px-0 lg:ml-[12vw] lg:mr-[8vw]">
-        <ScrollReveal>
-          <PretextSectionTitle label="About" title="A bit about me" />
-        </ScrollReveal>
+        <SectionHeader label="About" title="A bit about me" />
       </div>
 
       {/* Asymmetric 2-column layout */}
       <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-0">
         {/* Left column — bio text, bleeds to edge */}
         <ScrollReveal delay={0.1} className="lg:col-span-7">
-          <div className="px-6 lg:pl-[12vw] lg:pr-16 py-12 section-glass border-y border-white/[0.04]">
+          <div className="px-6 lg:pl-[12vw] lg:pr-16 py-12 section-glass border-y border-white/[0.04] overflow-hidden">
             <p className="text-muted leading-[2] text-base lg:text-lg mb-8">
               Associate Software Engineer with 1+ year of experience at IFS,
               specializing in full-stack development, database management, and

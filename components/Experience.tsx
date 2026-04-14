@@ -2,7 +2,7 @@
 
 import ScrollReveal from "./ScrollReveal";
 import { ScrollParallax } from "./ScrollReveal";
-import PretextSectionTitle from "./PretextSectionTitle";
+import SectionHeader from "./SectionHeader";
 
 const timeline = [
   {
@@ -46,9 +46,7 @@ export default function Experience() {
   return (
     <section id="experience" className="py-40 relative overflow-hidden section-glass">
       <div className="px-6 lg:px-0 lg:ml-[12vw] lg:mr-[8vw]">
-        <ScrollReveal>
-          <PretextSectionTitle label="Experience" title="Experience & Education" />
-        </ScrollReveal>
+        <SectionHeader label="Experience" title="Experience & Education" />
       </div>
 
       {/* Timeline — full-width rows */}
