@@ -31,8 +31,8 @@ export default function SectionHeader({ label, title, description }: SectionHead
         ease: "power3.out",
         scrollTrigger: {
           trigger: el,
-          start: "top 88%",
-          toggleActions: "play reverse play reverse",
+          start: "top 90%",
+          toggleActions: "play none none reverse",
         },
       });
     });
