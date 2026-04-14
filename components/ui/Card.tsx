@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface CardProps {
   children: ReactNode;
@@ -7,18 +8,23 @@ interface CardProps {
   onClick?: () => void;
 }
 
-export default function Card({ children, className = "", hover = false, onClick }: CardProps) {
-  const baseStyles =
-    "bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#1f1f1f] rounded-xl p-6 transition-all duration-300 shadow-sm dark:shadow-none";
-  const hoverStyles = hover
-    ? "hover:border-blue-500 dark:hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/20 dark:hover:shadow-blue-500/10 hover:-translate-y-1"
-    : "";
-
+export default function Card({
+  children,
+  className = "",
+  hover = false,
+  onClick,
+}: CardProps) {
   return (
-    <div className={`${baseStyles} ${hoverStyles} ${className}`} onClick={onClick}>
+    <div
+      className={cn(
+        "bg-[#0a0a0a]/80 border border-white/[0.06] rounded-2xl p-6 backdrop-blur-sm transition-all duration-500",
+        hover &&
+          "hover:border-white/[0.12] hover:bg-white/[0.03] hover:shadow-[0_0_40px_rgba(167,139,250,0.06)] hover:-translate-y-1",
+        className
+      )}
+      onClick={onClick}
+    >
       {children}
     </div>
   );
 }
-
-

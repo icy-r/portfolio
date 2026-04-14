@@ -10,7 +10,9 @@ interface TimelineItemProps {
 
 export default function Timeline({ children }: { children: ReactNode }) {
   return (
-    <div className="relative pl-8 border-l-2 border-gray-200 dark:border-gray-800">{children}</div>
+    <div className="relative pl-8 border-l border-white/[0.08]">
+      {children}
+    </div>
   );
 }
 
@@ -22,23 +24,24 @@ export function TimelineItem({
   isLast = false,
 }: TimelineItemProps) {
   return (
-    <div className={`relative pb-8 ${isLast ? "" : ""}`}>
-      <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-blue-600 border-2 border-white dark:border-black"></div>
+    <div className={isLast ? "" : "pb-10"}>
+      <div className="absolute -left-[5px] mt-1.5 w-2.5 h-2.5 rounded-full bg-accent/80 ring-4 ring-background" />
       <div className="ml-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
+            <h3 className="text-base font-semibold text-foreground">
+              {title}
+            </h3>
             {organization && (
-              <p className="text-blue-600 dark:text-blue-400 text-sm mt-1">{organization}</p>
+              <p className="text-accent/80 text-sm mt-0.5">{organization}</p>
             )}
           </div>
-          <span className="text-gray-500 dark:text-gray-500 text-sm mt-1 sm:mt-0">{period}</span>
+          <span className="text-muted text-xs font-medium tracking-wide uppercase mt-1 sm:mt-0">
+            {period}
+          </span>
         </div>
-        <div className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-          {description}
-        </div>
+        <div className="text-muted text-sm leading-relaxed">{description}</div>
       </div>
     </div>
   );
 }
-
